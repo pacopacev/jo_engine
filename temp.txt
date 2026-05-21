@@ -1,0 +1,56 @@
+-- public.products definition
+
+-- Drop table
+
+-- DROP TABLE public.products;
+
+CREATE TABLE public.products (
+	id serial4 NOT NULL,
+	"name" text NOT NULL,
+	ma_number text NOT NULL,
+	description text NULL,
+	is_assembly bool DEFAULT false NULL,
+	created_at timestamp DEFAULT now() NULL,
+	updated_at timestamp DEFAULT now() NULL,
+	created_by varchar(100) NULL,
+	project_id int4 NULL,
+	CONSTRAINT products_ma_number_key UNIQUE (ma_number),
+	CONSTRAINT products_pkey PRIMARY KEY (id),
+	CONSTRAINT products_projects_fk FOREIGN KEY (project_id) REFERENCES public.projects(id)
+);
+CREATE INDEX idx_products_ma_number ON public.products USING btree (ma_number);
+
+-- Table Triggers
+
+create trigger update_products_updated_at before
+update
+    on
+    public.products for each row execute function update_updated_at_column();
+
+
+
+
+
+	python main.py colors data.xlsx
+
+	python main.py materials data.xls
+
+	python main.py types data.xlsx
+
+	python main.py families data.xlsx
+
+	python main.py projects data.xlsx
+
+	
+
+
+
+	python main.py full-import data.xlsx
+
+	python main.py cj data.xlsx 3
+
+	python main.py pjobs 3
+
+	 
+
+	 
