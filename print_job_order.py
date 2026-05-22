@@ -23,6 +23,7 @@ WHERE p.parent_id is NULL
 ORDER BY p2.ma_number ASC
 )
 
+
 SELECT jo.job_order_number, jo.batch_id, jo.quantity, details.*, jo.price_offer_num, pgp.dimension_x_g, pgp.dimension_y_g, pgp.dimension_z_g, pgp.qty_per_group, pgp.id, pj.project_name from job_orders jo
 LEFT JOIN details ON details.id = jo.product_id
 left join parts_group_process pgp on pgp.product_id = jo.product_id

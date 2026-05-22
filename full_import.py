@@ -96,6 +96,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
             description = safe_str(row.get('Description'))
             is_assembly = safe_bool(row.get('Is_Assembly', False))
             type_code = safe_str(row.get('type_code'))
+            alt_name = safe_str(row.get('alt_name'))
             
             # Get or create product type
             type_id = None
@@ -106,15 +107,16 @@ def import_full_production_data(excel_file, target_batch_id=None):
                     type_id = result[0]
                 else:
                     cursor.execute("""
-                        INSERT INTO product_type (type_code, type_name, created_by, updated_at)
-                        VALUES (%s, %s, %s, NOW())
+                        INSERT INTO product_type (type_code, type_name, created_by, updated_at, alt_name)
+                        VALUES (%s, %s, %s, NOW(), %s)
                         ON CONFLICT (type_code) 
                         DO UPDATE SET 
                         type_name = EXCLUDED.type_name,
                         updated_at = NOW(),
-                        created_by = EXCLUDED.created_by
+                        created_by = EXCLUDED.created_by,
+                        alt_name = EXCLUDED.alt_name
                         RETURNING id
-                    """, (type_code, type_code, 'system'))
+                    """, (type_code, type_code, 'system', alt_name))
                     type_id = cursor.fetchone()[0]
                     stats['types'] += 1
                     log(f"   🏷️ Created type: {type_code}")

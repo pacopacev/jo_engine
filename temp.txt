@@ -37,9 +37,11 @@ update
 
 	python main.py types data.xlsx
 
+	python main.py projects data.xlsx
+	
 	python main.py families data.xlsx
 
-	python main.py projects data.xlsx
+	
 
 	
 
