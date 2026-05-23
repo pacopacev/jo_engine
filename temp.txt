@@ -28,7 +28,7 @@ update
     public.products for each row execute function update_updated_at_column();
 
 
-
+pyinstaller barcode_screen.spec
 
 
 	python main.py colors data.xlsx
