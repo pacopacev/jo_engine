@@ -8,7 +8,7 @@ import os
 import sys
 
 root = tk.Tk()
-root.title("Barcode Screen")
+# root.title("Barcode Screen")
 root.attributes("-fullscreen", True)
 root.configure(bg="#0047AB")
 
@@ -59,6 +59,14 @@ def check_database_connection():
         database_status_label.pack(pady=10)
         return True
     except Exception as e:
+        database_status_label = tk.Label(
+            main_frame,
+            text="Database: Not Connected",
+            font=("ArialBold", 14),
+            fg="Red",
+            bg="#0047AB"
+        )
+        database_status_label.pack(pady=10)
         log(f"Database connection failed: {e}", "ERROR")
         return False
     finally:
@@ -131,7 +139,7 @@ def get_station_info():
     
     if conn is None:
         log("Cannot fetch station info: No connection", "ERROR")
-        station_label.config(text="Работно място: Грешка в връзката")
+        station_label.config(text="Работно място: Грешка във връзката")
         return
 
     try:
@@ -182,6 +190,17 @@ def record_scan_to_db(barcode):
 
     try:
         with conn.cursor() as cursor:
+            # insert_to_job_orders_query = """
+            #     update job_orders set scanned_at = %s, scanned_by_user = %s where job_order_id = %s 
+            #     RETURNING job_orders (job_order_id, scanned_at, scanned_by_user)
+            #     VALUES (%s, %s, %s)
+            #     ON CONFLICT (job_order_id) DO UPDATE SET
+            #         scanned_at = EXCLUDED.scanned_at,
+            #         scanned_by_user = EXCLUDED.scanned_by_user,
+            #         updated_at = NOW()
+            # """
+            # cursor.execute(insert_to_job_orders_query, (job_order_id, scanned_at, scanned_by_user, ))
+            
             insert_query = """
                 INSERT INTO station_scans (job_order_id, station_id, scanned_at, scanned_by_user)
                 VALUES (%s, %s, %s, %s)
