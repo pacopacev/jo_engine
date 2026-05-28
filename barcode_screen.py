@@ -1,5 +1,5 @@
-
 import tkinter as tk
+from tkinter import ttk
 from datetime import datetime
 import socket
 import pandas as pd
@@ -8,12 +8,25 @@ import os
 import sys
 
 root = tk.Tk()
-# root.title("Barcode Screen")
+root.title("Barcode Screen")
+
+# if os.path.exists("favicon.ico"):
+#     root.iconbitmap("favicon.ico")
+# else:
+#     print("Icon file not found")
+
 root.attributes("-fullscreen", True)
 root.configure(bg="#0047AB")
 
-main_frame = tk.Frame(root, bg="#0047AB")
-main_frame.pack(expand=True)
+style = ttk.Style()
+style.configure("TLabel", background="#0047AB", foreground="red")
+
+# Configure grid weights for responsive layout
+root.grid_rowconfigure(0, weight=1)  # Top section expands
+root.grid_rowconfigure(1, weight=0)  # Bottom section fixed
+root.grid_columnconfigure(0, weight=1)  # Left side expands
+root.grid_columnconfigure(1, weight=0)  # Separator fixed
+root.grid_columnconfigure(2, weight=0)  # Right side fixed
 
 current_barcode = "WAITING FOR SCAN"
 station_name = "Зареждане..."  # Default text until fetched
@@ -23,15 +36,11 @@ scan_locked = False
 
 computer_name = socket.gethostname()
 
-
 # Find the folder where the .exe is running
 if getattr(sys, 'frozen', False):
     current_dir = os.path.dirname(sys.executable)
 else:
     current_dir = os.path.dirname(os.path.abspath(__file__))
-
-
-
 
 # =============================================
 # DATABASE CONFIGURATION (AIVEN CLOUD)
@@ -45,45 +54,15 @@ DB_CONFIG = {
     'sslmode': 'require',
 }
 
-def check_database_connection():
-    conn = None
-    try:
-        conn = psycopg2.connect(**DB_CONFIG)
-        database_status_label = tk.Label(
-            main_frame,
-            text="Database: Connected",
-            font=("ArialBold", 14),
-            fg="Yellow",
-            bg="#0047AB"
-        )
-        database_status_label.pack(pady=10)
-        return True
-    except Exception as e:
-        database_status_label = tk.Label(
-            main_frame,
-            text="Database: Not Connected",
-            font=("ArialBold", 14),
-            fg="Red",
-            bg="#0047AB"
-        )
-        database_status_label.pack(pady=10)
-        log(f"Database connection failed: {e}", "ERROR")
-        return False
-    finally:
-        if conn:
-            conn.close()
-
 # =============================================
 # LOGGING
 # =============================================
 def log(message, type="INFO"):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    # Safe printing wrapper to prevent crashes when compiled under --noconsole
     try:
         print(f"[{timestamp}] [{type}] {message}")
     except OSError:
         pass
-
 
 def destroy_status_label():
     global status_label
@@ -94,7 +73,6 @@ def destroy_status_label():
             pass
         status_label = None
 
-
 def destroy_status_label_if_same(label):
     global status_label
     if status_label is label:
@@ -103,7 +81,6 @@ def destroy_status_label_if_same(label):
         except Exception:
             pass
         status_label = None
-
 
 def unlock_scan():
     global scan_locked
@@ -159,9 +136,74 @@ def get_station_info():
     finally:
         conn.close()
 
+def check_database_connection():
+    conn = None
+    try:
+        conn = psycopg2.connect(**DB_CONFIG)
+        database_status_label = tk.Label(
+            right_container,
+            text="DB: Connected",
+            font=("ArialBold", 14),
+            fg="Green",
+        )
+        database_status_label.grid(row=1, column=0, sticky="new", padx=10, pady=5)
+        return True
+    except Exception as e:
+        database_status_label = tk.Label(
+            right_container,
+            text="DB: NC",
+            font=("ArialBold", 14),
+            fg="Red",
+        )
+        database_status_label.grid(row=1, column=0, sticky="new", padx=10, pady=5)
+        log(f"Database connection failed: {e}", "ERROR")
+        return False
+    finally:
+        if conn:
+            conn.close()
+
+def delete_scan():
+    barcode = entry_field.get().strip()
+    if not barcode or barcode == "Scanned barcode ...":
+        log("No valid barcode to delete", "WARNING")
+        return
+    
+    try:
+        new_barcode = int(barcode)
+    except ValueError:
+        log(f"Invalid barcode format: {barcode}", "ERROR")
+        return
+    
+    log(f"Attempting to delete scan from database: {new_barcode}")
+    conn = get_connection()
+    if conn is None:
+        log("Cannot delete scan from database: No connection", "ERROR")
+        return
+
+    try:
+        with conn.cursor() as cursor:
+            delete_query = """
+                DELETE FROM station_scans WHERE job_order_id = %s
+            """
+            cursor.execute(delete_query, (new_barcode, ))
+            conn.commit()
+            log(f"Scan deleted from database: {new_barcode}")
+            entry_field.delete(0, tk.END)
+            entry_field.insert(0, "Scanned barcode ...")
+            entry_field.config(fg='gray')
+    except Exception as e:
+        log(f"Failed to delete scan from database: {e}", "ERROR")
+    finally:
+        conn.close()
+
 def barcode_scanned(event):
     global current_barcode, scan_locked
     barcode = entry.get().strip()
+    
+    # Update the visible entry field
+    entry_field.delete(0, tk.END)
+    entry_field.insert(0, barcode)
+    entry_field.config(fg='black')
 
     if scan_locked:
         log("Scan ignored: wait for previous scan to finish", "WARNING")
@@ -190,22 +232,11 @@ def record_scan_to_db(barcode):
 
     try:
         with conn.cursor() as cursor:
-            # insert_to_job_orders_query = """
-            #     update job_orders set scanned_at = %s, scanned_by_user = %s where job_order_id = %s 
-            #     RETURNING job_orders (job_order_id, scanned_at, scanned_by_user)
-            #     VALUES (%s, %s, %s)
-            #     ON CONFLICT (job_order_id) DO UPDATE SET
-            #         scanned_at = EXCLUDED.scanned_at,
-            #         scanned_by_user = EXCLUDED.scanned_by_user,
-            #         updated_at = NOW()
-            # """
-            # cursor.execute(insert_to_job_orders_query, (job_order_id, scanned_at, scanned_by_user, ))
-            
             insert_query = """
                 INSERT INTO station_scans (job_order_id, station_id, scanned_at, scanned_by_user)
                 VALUES (%s, %s, %s, %s)
             """
-            cursor.execute(insert_query, (job_order_id, station_id, scanned_at, scanned_by_user, ))
+            cursor.execute(insert_query, (job_order_id, station_id, scanned_at, scanned_by_user))
             conn.commit()
             log(f"Scanned at: {datetime.now().strftime('%d.%m.%Y %H:%M:%S')} by {scanned_by_user}")
             
@@ -215,9 +246,8 @@ def record_scan_to_db(barcode):
                 except Exception:
                     pass
 
-            # Formatted clean status on 2 distinct rows
             status_label = tk.Label(
-                main_frame,
+                center_frame,
                 text=f"Сканирана работна поръчка: {job_order_id}\nна {datetime.now().strftime('%d.%m.%Y %H:%M:%S')} от {scanned_by_user}",
                 font=("Arial", 28, "bold"),
                 fg="white",
@@ -227,21 +257,69 @@ def record_scan_to_db(barcode):
             status_label.pack(pady=20)
 
             scan_locked = True
-            delay = 3000  # milliseconds
+            delay = 3000
             root.after(delay, lambda label=status_label: destroy_status_label_if_same(label))
+            root.after(delay, lambda: [entry_field.delete(0, tk.END), 
+                           entry_field.insert(0, "Scanned barcode ..."), 
+                           entry_field.config(fg='gray')])
+
             root.after(delay, unlock_scan)
-            root.after(delay, lambda: barcode_label.config(text="BARCODE: ИЗЧАКВА СКАНИРАНЕ...")) 
+            root.after(delay, lambda: barcode_label.config(text="BARCODE: ИЗЧАКВА СКАНИРАНЕ..."))
             log(f"Scan recorded to database: {barcode}")
     except Exception as e:
         log(f"Failed to record scan to database: {e}", "ERROR")
     finally:
         conn.close()
 
+
+def getLastScannedJobOrderID():
+    # global station_id
+    
+    station_id = 4
+    print(station_id)
+    conn = get_connection()
+    if conn is None:
+        log("Cannot fetch last scanned job order ID: No connection", "ERROR")
+        return None
+
+    try:
+        with conn.cursor() as cursor:
+            query = """
+                SELECT job_order_id FROM station_scans
+                WHERE station_id = %s
+                ORDER BY scanned_at DESC
+                LIMIT 20
+            """
+            cursor.execute(query, (station_id,))
+            result = cursor.fetchall()
+            if result:
+                return result
+            else:
+                return None
+    except Exception as e:
+        log(f"Failed to fetch last scanned job order ID: {e}", "ERROR")
+        return None
+    finally:
+        conn.close()
 # =============================================
 # UI LAYOUT ELEMENTS
 # =============================================
+left_container = tk.Frame(root, bg="#0047AB")
+left_container.grid(row=0, column=0, rowspan=2, sticky="nsew")
+
+# Configure left_container to center content vertically
+left_container.grid_rowconfigure(0, weight=1)
+left_container.grid_rowconfigure(1, weight=0)
+left_container.grid_rowconfigure(2, weight=1)
+left_container.grid_columnconfigure(0, weight=1)
+
+# Create a center frame for all widgets
+center_frame = tk.Frame(left_container, bg="#0047AB")
+center_frame.grid(row=1, column=0, sticky="nsew")
+center_frame.grid_columnconfigure(0, weight=1)
+
 station_label = tk.Label(
-    main_frame,
+    center_frame,
     text=f"Работно място: {station_name}",
     font=("Arial", 28, "bold"),
     fg="white",
@@ -250,7 +328,7 @@ station_label = tk.Label(
 station_label.pack(pady=20)
 
 operator_label = tk.Label(
-    main_frame,
+    center_frame,
     text=f"Оператор: {computer_name}",
     font=("Arial", 28, "bold"),
     fg="white",
@@ -259,7 +337,7 @@ operator_label = tk.Label(
 operator_label.pack(pady=20)
 
 barcode_label = tk.Label(
-    main_frame,
+    center_frame,
     text="BARCODE: ИЗЧАКВА СКАНИРАНЕ...",
     font=("Arial", 42, "bold"),
     fg="white",
@@ -268,7 +346,7 @@ barcode_label = tk.Label(
 barcode_label.pack(pady=30)
 
 date_label = tk.Label(
-    main_frame,
+    center_frame,
     text="",
     font=("Arial", 24),
     fg="white",
@@ -277,13 +355,95 @@ date_label = tk.Label(
 date_label.pack(pady=40)
 
 help_label = tk.Label(
-    main_frame,
+    center_frame,
     text="Натисни ESC за изход | Press ESC to exit",
     font=("Arial", 13),
     fg="white",
     bg="#0047AB"
 )
 help_label.pack(pady=20)
+
+# Separator (full height of screen)
+separator = ttk.Separator(root, orient="vertical")
+separator.grid(row=0, column=1, rowspan=2, sticky="ns", padx=1, pady=1)
+
+# Right side container (for label and buttons)
+right_container = tk.Frame(root)
+right_container.grid(row=0, column=2, rowspan=2, sticky="nsew")
+
+# Configure right_container for vertical layout
+right_container.grid_rowconfigure(0, weight=0)  # Status label row (fixed)
+right_container.grid_rowconfigure(1, weight=1)  # Empty space (pushes button_frame down)
+right_container.grid_rowconfigure(2, weight=0)  # Button frame row (fixed)
+right_container.grid_columnconfigure(0, weight=1)
+
+
+version = "1.0.1"
+version_label = tk.Label(right_container, text=f"v{version}", font=("Arial", 8))
+version_label.grid(row=0, column=0, sticky="new", padx=10, pady=5)
+
+
+list_of_scans_label = tk.Label(
+    right_container,
+    text="Последни сканирания:",
+    font=("Arial", 11),
+    fg="black",
+)
+
+
+listbox = tk.Listbox(right_container, height=21, bg="white", fg="black", font=("Arial", 10))
+listbox.grid(row=3, column=0, sticky="new", padx=10, pady=10)
+
+list_of_scans_label.grid(row=2, column=0, sticky="new", padx=10, pady=5)
+
+recent_scans= getLastScannedJobOrderID()
+
+for item in recent_scans:
+    listbox.insert(tk.END, item)
+# listbox.bind("<<ListboxSelect>>", selection_changed)
+
+
+
+
+
+# Frame for buttons (bottom-right)
+button_frame = tk.Frame(right_container)
+button_frame.grid(row=4, column=0, sticky="se", padx=10, pady=10)
+
+# Entry widget
+entry_field = tk.Entry(button_frame, width=20, fg='gray')
+entry_field.insert(0, "Scanned barcode ...")
+entry_field.pack(pady=5)
+
+entry_field.config(state='normal')
+entry_field.bind("<Button-1>", lambda e: entry_field.focus_set())
+
+# Clear placeholder on focus
+def on_entry_click(event):
+    if entry_field.get() == "Scanned barcode ..." and entry_field['fg'] == 'gray':
+        entry_field.delete(0, tk.END)
+        entry_field.config(fg='black')
+
+def on_focus_out(event):
+    if entry_field.get() == "":
+        entry_field.insert(0, "Scanned barcode ...")
+        entry_field.config(fg='gray')
+
+entry_field.bind('<FocusIn>', on_entry_click)
+entry_field.bind('<FocusOut>', on_focus_out)
+
+# Configure ttk styles for buttons
+style = ttk.Style()
+style.theme_use('clam')
+style.configure("DELETE.TButton", foreground="red", background="lightgray", font=("Arial", 13))
+style.configure("CLEAR.TButton", foreground="green", background="lightgray", font=("Arial", 13))
+
+# Buttons
+button_delete = ttk.Button(button_frame, text="Delete Scan", style="DELETE.TButton", width=13, command=delete_scan)
+button_delete.pack(pady=5)
+
+button_clear = ttk.Button(button_frame, command=(lambda: [entry_field.delete(0, tk.END), entry_field.insert(0, "Scanned barcode ..."), entry_field.config(fg='gray')]), text="Clear", style="CLEAR.TButton", width=13)
+button_clear.pack(pady=5)
 
 # Hidden text field capturing barcode scanner keystrokes
 entry = tk.Entry(root)
@@ -299,8 +459,8 @@ root.bind("<Button-1>", lambda e: entry.focus_set())
 # =============================================
 update_time()
 check_database_connection()
-get_station_info()  # Dynamically updates UI elements with data rows securely
+get_station_info()
+getLastScannedJobOrderID()
 
 root.bind("<Escape>", lambda e: root.destroy())
 root.mainloop()
-
