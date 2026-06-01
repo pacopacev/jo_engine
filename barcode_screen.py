@@ -143,7 +143,7 @@ def check_database_connection():
         database_status_label = tk.Label(
             right_container,
             text="DB: Connected",
-            font=("ArialBold", 14),
+            font=("ArialBold", 10),
             fg="Green",
         )
         database_status_label.grid(row=1, column=0, sticky="new", padx=10, pady=5)
@@ -152,7 +152,7 @@ def check_database_connection():
         database_status_label = tk.Label(
             right_container,
             text="DB: NC",
-            font=("ArialBold", 14),
+            font=("ArialBold", 10),
             fg="Red",
         )
         database_status_label.grid(row=1, column=0, sticky="new", padx=10, pady=5)
@@ -273,10 +273,10 @@ def record_scan_to_db(barcode):
 
 
 def getLastScannedJobOrderID():
-    # global station_id
+    global station_id
     
-    station_id = 4
-    print(station_id)
+    # station_id = 4
+    # print(station_id)
     conn = get_connection()
     if conn is None:
         log("Cannot fetch last scanned job order ID: No connection", "ERROR")
@@ -285,17 +285,27 @@ def getLastScannedJobOrderID():
     try:
         with conn.cursor() as cursor:
             query = """
-                SELECT job_order_id FROM station_scans
-                WHERE station_id = %s
+                SELECT job_order_id, scanned_at FROM station_scans
+                WHERE station_id = %s and scanned_at >= (CURRENT_DATE - INTERVAL '3 days')
                 ORDER BY scanned_at DESC
-                LIMIT 20
+                
             """
             cursor.execute(query, (station_id,))
             result = cursor.fetchall()
             if result:
-                return result
+                for item in result:
+                    listbox.insert(tk.END, f" {item[0]} - {item[1].strftime('%d.%m.%Y %H:%M')}")
             else:
-                return None
+                listbox.grid_remove() 
+    
+                empty_label = tk.Label(
+                    right_container,
+                    text="Няма сканирани\nработни поръчки в\nпоследните 3 дни",
+                    font=("Arial", 10, "italic"),
+                    fg="gray",
+                    justify="center"
+                )
+                empty_label.grid(row=4, column=0, sticky="n", padx=10, pady=10)
     except Exception as e:
         log(f"Failed to fetch last scanned job order ID: {e}", "ERROR")
         return None
@@ -367,40 +377,55 @@ help_label.pack(pady=20)
 separator = ttk.Separator(root, orient="vertical")
 separator.grid(row=0, column=1, rowspan=2, sticky="ns", padx=1, pady=1)
 
+
+
 # Right side container (for label and buttons)
 right_container = tk.Frame(root)
 right_container.grid(row=0, column=2, rowspan=2, sticky="nsew")
 
 # Configure right_container for vertical layout
-right_container.grid_rowconfigure(0, weight=0)  # Status label row (fixed)
-right_container.grid_rowconfigure(1, weight=1)  # Empty space (pushes button_frame down)
-right_container.grid_rowconfigure(2, weight=0)  # Button frame row (fixed)
+right_container.grid_rowconfigure(0, weight=0)  # Version label
+right_container.grid_rowconfigure(1, weight=0)  # List of scans label (Upper)
+right_container.grid_rowconfigure(2, weight=0)  # Listbox (Upper)
+right_container.grid_rowconfigure(3, weight=0)  # Dynamic empty space (pushes buttons down)
+right_container.grid_rowconfigure(4, weight=1)  # Button frame row (Bottom)
+right_container.grid_rowconfigure(5, weight=0)  # Button frame row (Bottom)
 right_container.grid_columnconfigure(0, weight=1)
+
 
 
 version = "1.0.1"
 version_label = tk.Label(right_container, text=f"v{version}", font=("Arial", 8))
 version_label.grid(row=0, column=0, sticky="new", padx=10, pady=5)
 
+separator2 = ttk.Separator(right_container, orient="horizontal")
+separator2.grid(row=5, column=0, sticky="ew", padx=3)
+
+
+separator3 = ttk.Separator(right_container, orient="horizontal")    
+separator3.grid(row=2, column=0, sticky="ew", padx=3)
 
 list_of_scans_label = tk.Label(
     right_container,
-    text="Последни сканирания:",
-    font=("Arial", 11),
-    fg="black",
+    text="Последни сканирани\nработни поръчки:",
+    font=("Arial", 9),
+    fg="black", padx=5, pady=5
 )
 
+list_of_scans_label.grid(row=3, column=0, sticky="new", padx=5, pady=5)
 
-listbox = tk.Listbox(right_container, height=21, bg="white", fg="black", font=("Arial", 10))
-listbox.grid(row=3, column=0, sticky="new", padx=10, pady=10)
+listbox = tk.Listbox(right_container, height=21, bg="white", fg="black", font=("Arial", 8))
+listbox.grid(row=4, column=0, sticky="new", padx=5, pady=5)
 
-list_of_scans_label.grid(row=2, column=0, sticky="new", padx=10, pady=5)
 
-recent_scans= getLastScannedJobOrderID()
 
-for item in recent_scans:
-    listbox.insert(tk.END, item)
-# listbox.bind("<<ListboxSelect>>", selection_changed)
+
+
+# recent_scans= getLastScannedJobOrderID()
+
+# for item in recent_scans:
+#     listbox.insert(tk.END, f" {item[0]} - {item[1].strftime('%d.%m.%Y %H:%M')}")
+
 
 
 
@@ -408,12 +433,12 @@ for item in recent_scans:
 
 # Frame for buttons (bottom-right)
 button_frame = tk.Frame(right_container)
-button_frame.grid(row=4, column=0, sticky="se", padx=10, pady=10)
+button_frame.grid(row=6, column=0, sticky="new", padx=10, pady=10)
 
 # Entry widget
 entry_field = tk.Entry(button_frame, width=20, fg='gray')
 entry_field.insert(0, "Scanned barcode ...")
-entry_field.pack(pady=5)
+entry_field.pack(padx=2, pady=5)
 
 entry_field.config(state='normal')
 entry_field.bind("<Button-1>", lambda e: entry_field.focus_set())
