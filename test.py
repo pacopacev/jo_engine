@@ -5,6 +5,34 @@ import socket
 computer_name = socket.gethostname()
 print(f"Running on computer: {computer_name}")
 
+name = "7283600430+7283600530A"
+print(len(str(name)))
+
+if(len(str(name)) == 8):
+    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10]
+    print(new_name)
+elif(len(str(name)) == 10):
+    new_name = name[0:4] + " " + name[4:8]
+    print(new_name)
+elif(len(str(name)) == 20 and name[10:11] == "+"): #7283 2233 60 + 7283 2233A
+    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + name[19:20]
+    print(new_name) 
+elif(len(str(name)) == 21 and name[10:11] == "+"): #7283 6004 30 + 7283 6005 30
+    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21]
+    print(new_name)  
+elif(len(str(name)) == 22 and name[10:11] == "+"): #7283 2233 60 + 7283 2233 60A
+    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21] + name[21:22]
+    print(new_name)   
+elif(len(str(name)) == 31 and name[10:11] == "+"): #7283 6004 30 + 7283 6005 30 + 7283 2244A
+    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21] + " " + name[21:22] + " " + name[22:26] + " " + name[26:30] + name[30:31]
+    print(new_name) 
+         
+elif(len(str(name)) == 33 and name[10:11] == "+"): #7283 6004 30 + 7283 6005 30 + 7283 2244 60A
+    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21] + " " + name[21:22] + " " + name[22:26] + " " + name[26:30] + " " + name[30:33]
+    print(new_name)
+else:
+    print(name)
+
 
 # file_path = "S:/JO"
 

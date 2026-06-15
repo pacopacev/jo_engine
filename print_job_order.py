@@ -1,15 +1,18 @@
+import math
+
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
-from utils import log, get_connection, safe_int, safe_datetime, safe_str, safe_bool, safe_float
+# from utils import log, get_connection, safe_int, safe_datetime, safe_str, safe_bool, safe_float
 import os
 import psycopg2
 from openpyxl import load_workbook
 import shutil
 from extract_drawings import getDrawing
+from globalModel import GlobalModel
 
 
-
+global_model = GlobalModel()
 def print_job_orders(target_batch_id=None):
     
     job_order_query = """ 
@@ -63,11 +66,11 @@ ORDER BY jo.job_order_number ASC"""
 
     
     if not target_batch_id:
-        log("Batch ID is required to print job orders", "ERROR")
+        global_model.log("Batch ID is required to print job orders", "ERROR")
         return False
     
-    log(f"📋 Printing job orders for batch_id: {target_batch_id}")
-    conn = get_connection()
+    global_model.log(f"📋 Printing job orders for batch_id: {target_batch_id}")
+    conn = global_model.conn
     if not conn:
         return False
     
@@ -78,17 +81,17 @@ ORDER BY jo.job_order_number ASC"""
         
         batch_dir = BASE_OUTPUT_PATH / str(target_batch_id)
         batch_dir.mkdir(parents=True, exist_ok=True)
-        log(f"Working directory: {batch_dir.absolute()}")
+        global_model.log(f"Working directory: {batch_dir.absolute()}")
         
         # Path to template file
         template_path = Path("jo.xlsx")
         appended_template_path = Path("appendix.xlsx")  # "appendix.xlsx"
         
         if not template_path.exists():
-            log(f"Template file not found: {template_path}", "ERROR")
+            global_model.log(f"Template file not found: {template_path}", "ERROR")
             return False
         if not appended_template_path.exists():
-            log(f"Appended template file not found: {appended_template_path}", "ERROR")
+            global_model.log(f"Appended template file not found: {appended_template_path}", "ERROR")
             return False
         
         
@@ -100,38 +103,38 @@ ORDER BY jo.job_order_number ASC"""
         
         
         if not rows:
-            log("No data returned from query", "WARNING")
+            global_model.log("No data returned from query", "WARNING")
             return False
         
         success_count = 0
         for idx, row in enumerate(rows, 1):
             try:
-                job_order_number = safe_str(row[0]) if row[0] else f"JO_{idx}"
-                batch_id = safe_str(row[1]) if row[1] else target_batch_id
-                quantity = safe_int(row[2]) if row[2] else 0
+                job_order_number = global_model.safe_str(row[0]) if row[0] else f"JO_{idx}"
+                batch_id = global_model.safe_str(row[1]) if row[1] else target_batch_id
+                quantity = global_model.safe_int(row[2]) if row[2] else 0
                 if batch_id != str(target_batch_id):
-                    log(f"   ⚠️ Missing batch_id: {batch_id}", "WARNING")
+                    global_model.log(f"   ⚠️ Missing batch_id: {batch_id}", "WARNING")
                     break
-                id = safe_str(row[3]) if row[3] else ""
-                ma_number = safe_str(row[4]) if row[4] else ""
-                dimension_x = safe_float(row[6]) if row[6] else ""
-                dimension_y = safe_float(row[7]) if row[7] else ""
-                dimension_z = safe_float(row[8]) if row[8] else ""  
-                color_name_bg = safe_str(row[11]) if row[11] else ""
-                name = safe_str(row[13]) if row[13] else ""
-                description = safe_str(row[15]) if row[15] else ""
-                type_code = safe_str(row[16]) if row[16] else ""
-                material_name_bg = safe_str(row[17]) if row[17] else ""
-                process_cut = safe_bool(row[18]) if row[18] else False
-                process_mill = safe_bool(row[19]) if row[19] else False
-                is_assembly = safe_bool(row[20]) if row[20] else False
-                price_offer_num = safe_str(row[21]) if row[21] else ""
-                dimension_x_g = safe_float(row[22]) if row[22] else ""
-                dimension_y_g = safe_float(row[23]) if row[23] else ""
-                dimension_z_g = safe_float(row[24]) if row[24] else ""
-                qty_per_group = safe_int(row[25]) if row[25] else 0
-                group_id = safe_int(row[26]) if row[26] else 0
-                project_name = safe_str(row[27]) if row[27] else ""
+                id = global_model.safe_str(row[3]) if row[3] else ""
+                ma_number = global_model.safe_str(row[4]) if row[4] else ""
+                dimension_x = global_model.safe_float(row[6]) if row[6] else ""
+                dimension_y = global_model.safe_float(row[7]) if row[7] else ""
+                dimension_z = global_model.safe_float(row[8]) if row[8] else ""  
+                color_name_bg = global_model.safe_str(row[11]) if row[11] else ""
+                name = global_model.safe_str(row[13]) if row[13] else ""
+                description = global_model.safe_str(row[15]) if row[15] else ""
+                type_code = global_model.safe_str(row[16]) if row[16] else ""
+                material_name_bg = global_model.safe_str(row[17]) if row[17] else ""
+                process_cut = global_model.safe_bool(row[18]) if row[18] else False
+                process_mill = global_model.safe_bool(row[19]) if row[19] else False
+                is_assembly = global_model.safe_bool(row[20]) if row[20] else False
+                price_offer_num = global_model.safe_str(row[21]) if row[21] else ""
+                dimension_x_g = global_model.safe_float(row[22]) if row[22] else ""
+                dimension_y_g = global_model.safe_float(row[23]) if row[23] else ""
+                dimension_z_g = global_model.safe_float(row[24]) if row[24] else ""
+                qty_per_group = global_model.safe_int(row[25]) if row[25] else 0
+                group_id = global_model.safe_int(row[26]) if row[26] else 0
+                project_name = global_model.safe_str(row[27]) if row[27] else ""
                 
                 
                 
@@ -150,7 +153,7 @@ ORDER BY jo.job_order_number ASC"""
                         dst_path = drawings_dir / src_path.name
                         shutil.copy2(src_path, dst_path)
                     
-                    log(f"   📄 Copied {len(matyching_files)} drawing(s) to {drawings_dir}")
+                    global_model.log(f"   📄 Copied {len(matyching_files)} drawing(s) to {drawings_dir}")
                 
                  
                 # Use job order number as filename
@@ -180,7 +183,7 @@ ORDER BY jo.job_order_number ASC"""
                     sheet['N27'] = dimension_x_g
                     sheet['N28'] = dimension_y_g
                     sheet['N29'] = dimension_z_g
-                    sheet['J20'] = round(quantity % qty_per_group) if quantity % qty_per_group else quantity /qty_per_group
+                    sheet['J20'] = math.ceil(quantity / qty_per_group)
                     
                 else:   
                     sheet['N27'] = dimension_x
@@ -194,7 +197,13 @@ ORDER BY jo.job_order_number ASC"""
                 
                 sheet['I38'] = type_code
                 # sheet['L11'] = description
-                sheet['D10'] = name
+                
+                new_name = global_model.name_replace(name)#слага интервали на името на продукта
+                # print(new_name)
+                sheet['D10'] = new_name
+                # sheet['D10'] = name
+                
+                
                 sheet['G11'] = price_offer_num
                 
                 
@@ -208,10 +217,10 @@ ORDER BY jo.job_order_number ASC"""
                     
                     
                 if id and is_assembly == True:
-                    print(f"   🔍 Fetching child parts for product_id {id}")
+                    global_model.log(f"   🔍 Fetching child parts for product_id {id}")
                     cursor.execute(query, (id,))
                     row_childrens = cursor.fetchall()
-                    print(len(row_childrens))
+                    global_model.log(f"   📋 Found {len(row_childrens)} child parts")
                     sheet['S21'] = len(row_childrens)
                     
     
@@ -244,29 +253,29 @@ ORDER BY jo.job_order_number ASC"""
                             
                         wb_appendix.save(output_path_appendix)
                         wb_appendix.close()
-                        log(f"   ✅ Created appendix: {output_path_appendix}")
+                        global_model.log(f"   ✅ Created appendix: {output_path_appendix}")
                     else:
-                        log(f"   ⚠️ No child parts found for assembly {id}", "WARNING")
+                        global_model.log(f"   ⚠️ No child parts found for assembly {id}", "WARNING")
 
                     # Save the main workbook (ALWAYS)
                 wb.save(output_path)
                 wb.save(BASE_OUTPUT_PATH_JO / filename)  # Save a copy in the JO folder
                 success_count += 1
-                log(f"✅ [{idx}/{len(rows)}] Created main: {output_path}")
+                global_model.log(f"✅ [{idx}/{len(rows)}] Created main: {output_path}")
                 wb.close()
                 
             except Exception as e:
-                log(f"❌ Error processing job order {row[0] if row else 'unknown'}: {str(e)}", "ERROR")
+                global_model.log(f"❌ Error processing job order {row[0] if row else 'unknown'}: {str(e)}", "ERROR")
                 continue
         
         cursor.close()
         conn.close()
         
-        log(f"✅ Successfully created {success_count} out of {len(rows)} job order files in {batch_dir}")
+        global_model.log(f"✅ Successfully created {success_count} out of {len(rows)} job order files in {batch_dir}")
         return success_count > 0
         
     except Exception as e:
-        log(f"❌ Error in print_job_orders: {str(e)}", "ERROR")
+        global_model.log(f"❌ Error in print_job_orders: {str(e)}", "ERROR")
         if conn:
             conn.close()
         return False
@@ -295,20 +304,20 @@ def add_child_parts(row_childrens, id):
         # 14: quantity
         # 15: parent_id
         
-        product_id = safe_int(row_child[0]) if row_child[0] else None
-        ma_number = safe_str(row_child[1]) if row_child[1] else "N/A"
-        product_name = safe_str(row_child[2]) if row_child[2] else "N/A"
-        part_id = safe_int(row_child[5]) if row_child[5] else None
-        part_number = safe_str(row_child[6]) if row_child[6] else "N/A"
-        child_dimension_x = safe_float(row_child[7]) if row_child[7] else 0.0
-        child_dimension_y = safe_float(row_child[8]) if row_child[8] else 0.0
-        child_dimension_z = safe_float(row_child[9]) if row_child[9] else 0.0
-        process_cut = safe_bool(row_child[10]) if len(row_child) > 10 else False
-        process_mill = safe_bool(row_child[11]) if len(row_child) > 11 else False
-        child_color_name_bg = safe_str(row_child[12]) if len(row_child) > 12 and row_child[12] else "N/A"
-        child_material_name_bg = safe_str(row_child[13]) if len(row_child) > 13 and row_child[13] else "N/A"
-        child_quantity = safe_int(row_child[14]) if len(row_child) > 14 and row_child[14] else 0
-        parent_id = safe_int(row_child[15]) if len(row_child) > 15 and row_child[15] else None
+        product_id = global_model.safe_int(row_child[0]) if row_child[0] else None
+        ma_number = global_model.safe_str(row_child[1]) if row_child[1] else "N/A"
+        product_name = global_model.safe_str(row_child[2]) if row_child[2] else "N/A"
+        part_id = global_model.safe_int(row_child[5]) if row_child[5] else None
+        part_number = global_model.safe_str(row_child[6]) if row_child[6] else "N/A"
+        child_dimension_x = global_model.safe_float(row_child[7]) if row_child[7] else 0.0
+        child_dimension_y = global_model.safe_float(row_child[8]) if row_child[8] else 0.0
+        child_dimension_z = global_model.safe_float(row_child[9]) if row_child[9] else 0.0
+        process_cut = global_model.safe_bool(row_child[10]) if len(row_child) > 10 else False
+        process_mill = global_model.safe_bool(row_child[11]) if len(row_child) > 11 else False
+        child_color_name_bg = global_model.safe_str(row_child[12]) if len(row_child) > 12 and row_child[12] else "N/A"
+        child_material_name_bg = global_model.safe_str(row_child[13]) if len(row_child) > 13 and row_child[13] else "N/A"
+        child_quantity = global_model.safe_int(row_child[14]) if len(row_child) > 14 and row_child[14] else 0
+        parent_id = global_model.safe_int(row_child[15]) if len(row_child) > 15 and row_child[15] else None
         
         # Use part_id as key, or part_number if part_id is None
         key = str(part_id) if part_id else part_number
