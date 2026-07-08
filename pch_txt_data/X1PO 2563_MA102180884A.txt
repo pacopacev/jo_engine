@@ -1,0 +1,7 @@
+X1PO 2563_MA10.21.80884A
+
+Cutting Block:
+Part1-193x130x80-Yellow Delrin
+
+Lazer:
+Part2-189x183x10-Yellow Delrin

@@ -1,0 +1,5 @@
+7288 8110 30_A30_MA2147455B
+
+cutting block:37x70x70
+
+color and material:Black delrin

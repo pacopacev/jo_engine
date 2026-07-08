@@ -1,0 +1,12 @@
+ASSY-D4Z001DC0C_MA10.21.38926A
+
+Cutting Block:
+
+Part1-60x39x50-Blue Delrin
+Part2-60x39x30-Blue Delrin
+Part3-60x39x20-Blue Delrin
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z39.5-Stainless Steel-Strug
+Part6-D8-Z34.3-Stainless Steel-Strug

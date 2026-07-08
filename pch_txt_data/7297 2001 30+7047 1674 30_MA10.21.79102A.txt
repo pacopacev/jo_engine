@@ -1,0 +1,10 @@
+7297 1773 30 + 7147 8925 30_MA10.21.79103A
+
+Cutting Block:
+Part1- 89x57x66 - Black Delrin 60mm MA10.16.08536
+Part2- 89x57x30 - Black Delrin 30mm MA10.16.01905
+Part3- 89x57x20 - Black Delrin 20mm MA10.16.01904
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z50-Stainless Steel-Strug

@@ -1,0 +1,5 @@
+7052 1459_MA10.21.77267A
+
+Cutting block:25x25x35
+
+Material:Brass

@@ -1,0 +1,10 @@
+X1PO 2221_MA10.21.80724A
+
+Cutting Block:
+
+Part1-61x40x47-White Delrin
+Part2-61x40x30-White Delrin
+Part3-61x40x20-White Delrin
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-Stainless Steel-D8-Z37.3

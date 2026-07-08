@@ -1,0 +1,10 @@
+7119 6486 30 + 7274 1714 30_A 000 545 79 00+A 000 344 13 00
+_DR_Text_MA2142593A
+
+Cutting Block-62x67x60
+
+COLOR and material-Black Delrin
+
+
+
+Holder Dimation-57.95x62.9x50

@@ -1,0 +1,20 @@
+7285  1062 51+7125 9183 50_str_Ma2147446A
+
+Cutting Block:125x113x60
+the size of 60m can not be in minus
+
+
+
+Color and material:Brown Delrin
+
+The program C2147446A cut out of block on 54 mm 
+ 
+The program 03826 same cut out of block on 17 mm
+
+
+Fixet part_Ma2147446A
+
+Milling Block:145x140x30
+
+Color and material:Brown Delrin
+

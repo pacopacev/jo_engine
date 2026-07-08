@@ -1,0 +1,15 @@
+ASSY_59K24K1XX92A4C_CCB_MA10.21.83645B
+
+
+Color and Material:BLUE Delrin
+Cutting Block:
+
+Part 1:46x42x55
+Part 2:46x42x30
+Part 3:46x42x20
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5-Ф8-Z-44.5-lathe (струг)
+
+

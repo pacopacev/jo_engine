@@ -1,0 +1,12 @@
+7035 9452 30_MA10.21.80540A
+
+Cutting Block:
+
+Part 1:78x71x71-Black Delrin
+Part 2:78x71x40-Black Delrin
+Part 4:95x30x42-Black Delrin
+Part 5:25x15x32-Black Delrin
+
+Part 3:20x20x37-Brass
+
+

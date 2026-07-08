@@ -1,0 +1,13 @@
+X1PO 2536 PDC_MA10.21.80644A
+
+Cutting Block:
+Part2-45x36x30-White Delrin
+
+Part3-20x15x25-Brass - 2pcs
+
+Milling Block:
+Part1-256x90x75-White Delrin
+
+Part4-D5.5-Z10-Brass-Strug
+
+Part5-Akril Opal-2mm-Lazer

@@ -1,0 +1,24 @@
+7147 8789 30+strap_MA10.21.83631A
+Cutting Block:
+
+Part 1:28x22x29-Brass
+
+Part 2:48x22x44-Black Delrin
+
+Part 3:79x30x35-Black delrin
+
+Part4:dxf laser 2mm stainless steel
+
+Part 5: D8-stainless steel like teh. drawing
+
+Part 6:28x17x40-Black Delrin
+
+Part 7: 17x12x30
+
+Part 8: D6-brass like teh. drawing
+
+Part 9: 28x16x20-Black Delrin
+
+
+
+

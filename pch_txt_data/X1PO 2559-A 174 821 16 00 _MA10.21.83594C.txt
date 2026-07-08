@@ -1,0 +1,43 @@
+X1PO 2559+X1PO 2558-A 174 821 16 00+A 174 821 15 00_MA10.21.79664A
+
+Cutting Block:
+
+Part1-257x172x82-White Delrin
+Part2-257x172x46-White Delrin
+Part3-84x29x42-White Delrin
+Part4-84x29x37-White Delrin
+Part6-106x35x63-White Delrin
+Part12-224x25x30-White Delrin
+Part13-200x30x30-White Delrin
+
+Part 18-45x32x32-White Delrin
+Part 18 is when design is 
+without sensor for cover 
+
+Part7-20x15x25-Brass
+Part8-20x20x25-Brass
+
+Milling Block:
+Part9-220x50x76-White Delrin
+Part10-220x50x76-White Delrin
+
+
+
+Part15:DXF laser akril 2mm
+
+!!!with sensor for cover :
+
+Part5-3D print
+Part11-3D print
+Part14-3D Print
+Part16-3D Print
+Part17-3D Print
+
+
+
+
+
+
+
++MA 78 10939-1 pcs
++MA 78 10797-1 pcs

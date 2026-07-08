@@ -1,0 +1,9 @@
+X1PO-2407 - A1748212100 MA10.21.83745A
+
+Milling Block:
+Part1-137x126x80-White Delrin
+
+Cutting Block:
+Part2-141x130x40-White Delrin
+
+Design with Cover!!!!

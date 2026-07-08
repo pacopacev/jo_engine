@@ -1,0 +1,12 @@
+ASSY_AMZ005DC0E_MA10.21.96562A
+
+Cutting Block:
+
+Part 1:57x40x47-Green Delrin
+Part 2:57x40x30-Green Delrin
+Part 3:57x40x21-Green Delrin
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5: Ф8x38-lathe (струг)
+

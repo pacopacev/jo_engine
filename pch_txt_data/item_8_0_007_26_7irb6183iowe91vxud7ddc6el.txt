@@ -1,0 +1,15 @@
+﻿"Symbol";"Value";"Unit";
+"REFERENCE";"8.0.007.26";"";
+"TraceParts.PartVersion";"1.0.9";"";
+"SUPPLIER";"item Industrietechnik GmbH";"";
+"ARTNR_CORRECTED";"8000726";"";
+"TraceParts.PartStatus";"Published";"";
+"TraceParts.PartNumber";"30-17032016-091353";"";
+"TraceParts.PartLanguage";"en";"";
+"DESIGN";"Button-Head Screw M12x40";"";
+"TraceParts.InstanceId";"30-17032016-091353AWRSGTDS47DS5ZOV4FZZSSLSE";"";
+"TraceParts.PartTitle";"Button-Head Screw M12x40, bright zinc-plated";"";
+"TRACEPARTS";"TRACEPARTS";"";
+"TraceParts.PartStatusId";"";"";
+"SELECTION";"8.0.007.26";"";
+"TraceParts.ClassPath";"ITEM:/F_ITEM/1001009411/1001009506/1001012431/1001012466/30-17032016-091353";"";

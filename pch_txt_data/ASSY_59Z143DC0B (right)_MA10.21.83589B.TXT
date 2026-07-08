@@ -1,0 +1,15 @@
+ASSY_59Z143DC0B (right)_MA10.21.83589B
+
+Color and Material:White Delrin
+
+Cutting Block:
+
+Part 1:50x34x45
+Part 2:50x34x30
+Part 3:50x34x21
+
+
+
+Part 5-DXF-laser(лазер):Stainless steel-2mm 
+Part 6: Ф8x37.4-lathe (струг)
+

@@ -1,0 +1,12 @@
+7003 7079 02 + 7039 2836 30_MA10.21.79165B
+
+Cutting Block:
+Part1-71x47x58-White Delrin 60mm_MA10.16.08537
+Part2-71x47x30-White Delrin 30mm_MA10.16.01907
+Part3-71x47x20-White Delrin 20mm_MA10.16.01908
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z47-Stainless Steel-Strug
+Part6-Stainless Steel-Strug
+

@@ -1,0 +1,12 @@
+7219 6364 30+7174 1368 30A_MA10.21.37975A
+
+Color and Material:White Delrin
+Cutting Block:
+
+Part 1:85x46x64
+Part 2:85x46x30
+Part 3:85x46x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5-Ф8-Z-54.8-lathe (струг)
+

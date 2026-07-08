@@ -1,0 +1,21 @@
+Cover 7172 0583+seal 7172 5412 40-wire 3mm2_CCB_MA10.21.80881A
+
+Cutting Block:
+Part1-101x63x53-White Delrin
+Part4-101x63x35-White Delrin
+Part5-56x24x35-White Delrin
+
+Part 2-20x14x26-Brass
+Part 7-23x14x26-Brass
+
+
+
+Part3-Ф5x7-Brass strug
+
+Part6-Ф8x20-white delrin strug
+
+Part5-Akril 2m--Lazer-DXF
+Part8-Akril 2m--Lazer-DXF
+Part9-Akril 2m--Lazer-DXF
+
+

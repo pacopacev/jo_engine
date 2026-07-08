@@ -1,0 +1,15 @@
+7009 6376 02_ccb_MA10.21.44752
+
+Color and Material:White Delrin
+
+Cutting Block:
+
+Part 1:72x39x43
+Part 2:72x39x30
+Part 3:72x39x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm
+
+Part 5: Ф8-Z29-lathe (струг)
+
+

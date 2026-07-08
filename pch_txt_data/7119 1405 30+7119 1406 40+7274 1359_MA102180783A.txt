@@ -1,0 +1,11 @@
+7119 1405 30+7119 1406 40+7274 1359_MA10.21.80783A
+
+Cutting Block:White Delrin
+
+Part1-60x50x55
+Part2-60x50x30
+Part3-60x50x20
+
+
+Part4-D8-Z45.5-Stainless Steel-Strug
+Part5-Stainless Steel-2mm-Lazer

@@ -1,0 +1,29 @@
+ROSENBERGER CONNECTOR+WSOLATOR_MA21.81566A
+
+Cutting Block:White Delrin
+
+Part1-57x50x42
+Part2-53x46x45
+Part3-64x34x35
+Part 4-32x18x20-2 pcs
+Part 5-326x124x50
+Part 9-44x20x40
+Part 12-134x110x20
+
+Part 7-115x20x68-milling block
+
+
+DXF laser
+
+
+Part10-DXF laser plexiglass 4mm
+
+
+Part8-DXF laser stainles steel 1mm
+Part11-DXF laser stainles steel 1mm
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+7298-7935-40_MA10.21.83113A
+
+Color and Material:Gray Delrin
+
+Cutting Block:
+
+Part 1:70x48x84
+Part 2:70x48x30
+Part 3:70x48x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm
+
+Part 5: Ф8-Z75-lathe (струг)
+
+

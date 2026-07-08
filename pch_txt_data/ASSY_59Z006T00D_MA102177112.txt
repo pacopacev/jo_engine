@@ -1,0 +1,11 @@
+ASSY_59Z006T00D_MA10.21.77112A
+
+Cutting Block:red Delrin
+
+Part1-50x39x54
+Part2-50x39x30
+Part3-50x39x20
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z39.5-Stainless Steel-Strug

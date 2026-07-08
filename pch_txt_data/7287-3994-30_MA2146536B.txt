@@ -1,0 +1,15 @@
+7287-3994-30_MA2146536B
+
+
+Color and Material:Black Delrin
+
+Cutting Block:CNC
+
+Part 1:58x47x58
+Part 2:58x47x30
+Part 3:58x47x20
+
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5: Ф8  -lathe (струг)

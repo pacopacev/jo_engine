@@ -1,0 +1,19 @@
+7252 8341 30_CCB_MA10.21.80883A
+
+Cutting Block:
+Part1-30x28x29-BRASS
+
+
+Part2-46x30x49-Black Delrin
+Part3-75x30x35-Black Delrin
+
+Part4-dxf laser stainless steel 2mm
+
+Part5-d8x42 stainless steel 
+
+Part6-3D print
+
+
+
+
+

@@ -1,0 +1,13 @@
+
+[NetBackup]
+IPAddress0 =210 20 98 21
+SubNetMask0 =255 255 255 0
+DisableDHCP =1
+computername =CNCYOUNG
+username =CNC
+workgroup =SYNTECCLUB
+UserPwl =C:\NET\CNC.PWL
+PCName =SYNTECCNC
+PCDir =PUBLIC
+PCPass =
+PCReTry =

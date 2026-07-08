@@ -1,0 +1,188 @@
+o1000
+RABOTNA GLAVA
+233 X 233 X 50 RYAZAN
+T20 F20 Z-41.5
+T8 D5.2 Z-43
+T9 D3.2 Z-15
+T10 D4.2 Z-36
+T12 D2.5 Z-15
+T14 D6Z-43
+T2 F6 Z -12
+T5 R4 Z -1.6
+
+o1001
+RAKOHVATKA
+105 X 105 X20 RYAZAN
+T20 F20 Z-11
+T1 F10 Z-11
+T3 F3 Z-11
+T15 D3 Z-11
+T14 D6 Z-11
+T5 R4 Z-1.6
+
+
+o1002 x2br
+ ogranichiteli  X 2
+110 X 20 X 15 RYAZAN 
+T1 F10 Z-7.5
+T9 D3.2 Z-9
+
+o1003 x4br
+AL
+83 X 10 X 10
+T1 F10 Z-3.5
+T5 R4 Z-1.6
+T9 F3.2 Z -4
+
+o1005
+lagerno_tyalo
+ 105 X 85 X 23 RYAZANO
+ T20 F20 Z-0
+ T1 F10 Z-15.5
+ T14 D6 Z-17
+
+
+o1006b
+B_lagerno_tyalo
+100 X 15 X 80
+T8 D5.2 Z-20
+
+o1006f
+F_lagerno_tyalo
+100 X 15 X 80
+T8 D5.2 Z-20
+
+
+o1007
+  lagern_kapak
+ 105 X 85 X 15 RYAZAN
+ T20 F20 Z-0
+ T1 F10 Z-6.5
+ T14 D6 Z -9
+
+
+o1008 
+ planka_1 Dvigatel
+ 105 X 85 X 15
+ T20 F20 Z-0
+ T1 F10 Z-10.5
+ T4 F4 Z-10.5
+
+o1010
+ planka_2
+ 105 X 125 X 15
+ T20 F20 Z-0
+ T1 F10 Z-10.5
+ T14 D6 Z-12.5
+
+
+o1011
+Flanec AL
+ 60 X 60 X 20 RYAZAN
+ T1 F10 Z-15.5
+ T8 D5.2 Z-17.5
+
+o1012 x2Br
+Al_Os_saedenitel
+ 30 X 30 X 35
+ T1 F10 Z-22.5
+ T14 D6 Z -24
+ T2 F6 Z-22.5
+ T5 R4 Z-1.6
+
+o1013
+ silikon_Os_saedenitel
+ 30 X 30 X 30
+ T1 F10 Z-0
+ T2 F6 Z-11.5
+ T3 F3 Z -11.5
+ T6 F2 Z -11.5
+
+o1014
+PLOD ZA MONTAJ
+440 X 260 X 30 RYAZAN
+T20 F20 Z-20.5
+T8 D5.2 Z-23
+T9 D3.2 Z-23
+T2 F6 Z-21
+T5 R4 Z-1.6
+
+*************************
+optegach za kabela.NCD
+
+o1101
+optegach_za_kabela ms
+50 X 20 X 25 ryazan
+T1 F10 Z-15.5
+T9 D3.2 Z-17
+T2 F6 Z-8
+T5 R4 Z-1.6
+
+
+o1102
+optegach_za_kabela montaj_MS
+ 45 X 15 X 15
+ T15 D2 Z-17
+
+
+o1111
+optegach_za_kabela 
+55 X 55 X 30 RYAZANO
+T1 F10 Z- 20.5
+T10 D4.2Z -23
+T2 F6Z -17
+T5 R4 Z-1.6
+
+o1112
+optegach_za_kabela ot_dolu
+50 X 20 X 50
+T2 F6Z -20.5
+
+o1113
+optegach_za_kabelao izbutvach
+50 X 20 X 50
+T7 D3.7 Z-29
+T8 D5.2 Z -21
+
+
+o1114
+optegach_za_kabela pin
+50 X20 X 50
+T15 D2 Z-52
+
+
+o1115
+optegach_za_kabela montaj_plana_MS
+50 X 20 X 50
+T12 D2.5 Z-15
+
+
+o1121
+optegach_za_kabela
+STACIONARNI ROLKI
+55 X 35 X 30 RYAZAN
+T1 F10 Z-20.5
+T10 D4.2 Z -23
+T2 F6 Z -20.5
+
+o1122
+optegach_za_kabela
+STACIONARNI ROLKI ST. BOLT 
+50 X 20 X 30 RYAZAN
+
+T12 D2.5 Z -33
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

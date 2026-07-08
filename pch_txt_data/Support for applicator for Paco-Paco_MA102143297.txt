@@ -1,0 +1,13 @@
+Support for applicator for Paco-Paco_MA10.21.43297
+
+Cutting Block:
+Part1-73x80x35
+
+Part2-73x80x30
+
+Part3-152x80x40
+
+Color and material:Black Delrin
+
+
++PIN D8-Z7

@@ -1,0 +1,20 @@
+Cover 7172 0884 60+seal 7172 5437 50-wire 5mm2_MA10.21.80888A
+
+Cutting Block:
+Part1-101x89x53-White Delrin
+Part4-101x89x35-White Delrin
+
+Part 2-20x14x26-Brass
+Part 7-23x14x26-Brass
+
+
+
+Part3-Ф5x7-Brass strug
+
+Part6-Ф8x20-white delrin strug
+
+Part5-Akril 2m--Lazer-DXF
+Part8-Akril 2m--Lazer-DXF
+Part9-Akril 2m--Lazer-DXF
+
+

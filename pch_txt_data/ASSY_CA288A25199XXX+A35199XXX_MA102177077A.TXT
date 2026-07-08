@@ -1,0 +1,15 @@
+ASSY_CA288A25199XXX+A35199XXX_MA10.21.77077A
+
+Color and Material:Yellow Delrin
+Cutting Block:
+
+Part 1:58x40x50
+Part 2:58x40x30
+Part 3:58x40x20
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5-Ф8-Z-42-lathe (струг)
+Part 6-Ф8-Z-37.6-lathe (струг)
+
++PIN MA25 44652-Cutting Block-8x8x25-brass

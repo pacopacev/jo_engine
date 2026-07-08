@@ -1,0 +1,16 @@
+7176 9197 30+7176 9203 30_MA10.21.96491A
+
+
+Cutting Block:
+Part1-212x145x80-Yellow Delrin
+
+Part2-174x164x60-Yellow Delrin
+
+Part3-165x100x70-Yellow Delrin
+
+
+Part5-212x145x40-Yellow Delrin
+
+Part6-104x79x80-Yellow Delrin
+
+Part7-Yellow Delrin-10mm-Lazer

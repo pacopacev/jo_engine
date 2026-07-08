@@ -1,0 +1,15 @@
+7052 1027_MA2147422A    
+
+color and material:White Delrin
+
+cutting block(1 pcs)-32/38/45
+Cutting block(3 pcs)-100/38/45
+
+
+program for 1 cutting block-o3030
+
+program for 3 cutting block-o3025
+
+The program for milling(03026) the zeroing is done on a 30mm pad
+
+

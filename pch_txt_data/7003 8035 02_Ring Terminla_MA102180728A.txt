@@ -1,0 +1,7 @@
+7003 8035 02_Ring Terminla_MA10.21.80728A
+
+Cutting Block:45x46x46
+
+Color and material:White Delrin
+
++Pin - D8-Z16 Brass

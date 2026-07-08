@@ -1,0 +1,9 @@
+ASSY_59Z006T00C_MA10.21.42191A
+
+Cutting Block:
+
+Part1-50x40x54-Blue Delrin
+Part2-50x40x30-Blue Delrin
+Part3-50x40x20-Blue Delrin
+
+

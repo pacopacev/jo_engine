@@ -1,0 +1,15 @@
+ASSY_CA288B1519XXXX_MA10.21.77080A
+
+Color and Material:Black Delrin
+
+Cutting Block:
+
+Part 1:53x47x52
+Part 2:53x47x30
+Part 3:53x47x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm
+
+Part 5: Ф8-Z42.6-lathe (струг)
+
+

@@ -1,0 +1,9 @@
+Basis SPS EP MA10.21.80735A
+
+part 1
+Cutting block:
+64 x 54 x 44
+
+part 2
+Cutting block:
+54 x 44 x 20

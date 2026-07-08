@@ -1,0 +1,10 @@
+A1729821302_EYLET V3 2-KS_MA10.21.77184A
+
+Cutting Block:
+Part1-66x47x47-White Delrin
+Part2-66x47x30-White Delrin
+Part3-66x47x20-White Delrin
+
+Part4-Stainless Steel-Lazer
+Part5-Stainless Steel-D8-Z38.4-Strug
+Part6-D4.6-Z12-Brass

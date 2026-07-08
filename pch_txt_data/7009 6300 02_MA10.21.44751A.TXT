@@ -1,0 +1,12 @@
+7009 6300 02_MA10.21.44751A
+
+Color and Material:White Delrin
+Cutting Block:
+
+Part 1:77x40x43
+Part 2:77x40x30
+Part 3:77x40x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5-Ф8-Z-29-lathe (струг)
+

@@ -1,0 +1,26 @@
+Chember_135118-47-002X-45mm_MA10.16.15274A
+
+Milling block-PTFE-Teflon
+
+Part1-110x62x51
+
+Part5-110x30.8x28
+
+Part 11-29x24x25-Teflon cutting block
+
+Milling Block:
+Part2-110x51x10-Aluminuim
+Part8-147.3x128.3x9-Aluminium
+
+
+Cutting Block:
+Part3-154x24x61-Aluminuim
+Part7-154x24x61-Aluminuim
+
+Part4-Aluminuim-Lazer
+
+
+Part6-D6-Z22-Strug
+Part10-D5x20-strug
+
+Part 9-*mica micanite 0,4mm-DXF laser

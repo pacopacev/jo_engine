@@ -178,22 +178,26 @@ def delete_scan():
 
 def barcode_scanned(event):
     global current_barcode, scan_locked
-    barcode = entry.get().strip()
     
-    entry_field.delete(0, tk.END)
-    entry_field.insert(0, barcode)
-    entry_field.config(fg='black')
-
+    # 1. IMMEDIATE LOCK to prevent hardware double-triggering
     if scan_locked:
         global_model.log("Scan ignored: wait for previous scan to finish", "WARNING")
         entry.delete(0, tk.END)
         return
+    scan_locked = True 
+
+    barcode = entry.get().strip()
+    entry_field.delete(0, tk.END)
+    entry_field.insert(0, barcode)
+    entry_field.config(fg='black')
 
     if barcode:
         current_barcode = barcode
         barcode_label.config(text=f"BARCODE: {barcode}")
         global_model.log(f"BARCODE SCANNED: {barcode}")
         record_scan_to_db(barcode)
+    else:
+        scan_locked = False # Unlock if an empty scan happened
 
     entry.delete(0, tk.END)
 
@@ -303,7 +307,7 @@ def record_scan_to_db(barcode):
 def getLastScannedJobOrderID():
     global empty_label
     active_station = station_id if station_id is not None else 4
-    active_station = 4
+    #active_station = 4
     conn = get_connection()
     if conn is None:
         global_model.log("Cannot fetch last scanned job order ID: No connection", "ERROR")
@@ -341,11 +345,12 @@ def getLastScannedJobOrderID():
     except Exception as e:
         global_model.log(f"Failed to fetch last scanned job order ID: {e}", "ERROR")
         
+        
     root.after(5000, getLastScannedJobOrderID)
 
 def checkBArcodeIfExists(barcode):
-    # active_station = station_id if station_id is not None else 4
-    active_station = 4
+    active_station = station_id if station_id is not None else 4
+    #active_station = 4
     try:
         barcode_str = int(barcode)
     except ValueError:
@@ -368,14 +373,15 @@ def checkBArcodeIfExists(barcode):
         return False
 
 def update_dot():
-        current_text = barcode_label.cget("text")
-        print(current_text)
+    current_text = barcode_label.cget("text")
+    # Only animate if it's the waiting status
+    if "ИЗЧАКВА СКАНИРАНЕ" in current_text:
         if current_text.endswith("..."):
-            new_text = current_text[:-3] + "."
+            new_text = "BARCODE: ИЗЧАКВА СКАНИРАНЕ."
         else:
             new_text = current_text + "."
         barcode_label.config(text=new_text)
-        root.after(440, update_dot)
+    root.after(440, update_dot)
 
 # =============================================
 # UI LAYOUT ELEMENTS
@@ -455,7 +461,7 @@ right_container.grid_rowconfigure(5, weight=0)
 right_container.grid_rowconfigure(6, weight=0)  
 right_container.grid_columnconfigure(0, weight=1)
 
-version = "1.0.5"
+version = "1.0.6"
 build_date = datetime.now().strftime("%Y-%m-%d")
 
 version_label = tk.Label(right_container, text=f"v{version} ({build_date})", font=("Arial", 8))

@@ -1,0 +1,15 @@
+7219-6607 MA 10 21 81200-A TEKNIK RESIM
+
+Color and Material:Black Delrin
+
+Cutting Block:
+
+Part 1:61x34x50
+Part 2:61x34x30
+Part 3:61x34x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm
+
+Part 5: Ф8-Z37.5-lathe (струг)
+
+

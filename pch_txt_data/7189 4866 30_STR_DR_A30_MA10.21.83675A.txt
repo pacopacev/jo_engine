@@ -1,0 +1,5 @@
+7119 1315 30_STR_DR_A30_MA2142601B
+
+Cutting Block:46x32x51
+
+Color and material:Black Delrin

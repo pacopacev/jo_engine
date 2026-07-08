@@ -1,0 +1,12 @@
+ASSY_D4Z002DC0D_MA10.21.80674A
+
+Color and Material:Red Delrin
+
+Cutting Block:
+Part 1:62x40x49
+Part 2:62x40x30
+Part 3:62x40x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5: Ф8x40.2-lathe (струг)
+

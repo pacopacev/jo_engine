@@ -1,0 +1,20 @@
+7247 7815 30_clip checker_MA10.21.37808A
+
+Cutting Blokc:
+
+Part 1-33x30x32-Brass
+
+Part 2-52x30x47-White Delrin
+
+Part 3-74x30x35-White Delrin
+
+Part 4-Stainless Steel-2mm-Lazer
+
+Part 5-Stainless Steel-D8-Z40.3
+
+
+
+
+
++ Coding 3D-print (Black PLA)-MA10.16.11403
+

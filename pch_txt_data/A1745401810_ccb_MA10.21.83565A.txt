@@ -1,0 +1,16 @@
+A1745401810_ccb_MA10.21.83565A
+
+Cutting Block:
+Part1-246x155x65-White Delrin
+Part3-54x40x55-White Delrin
+Part4-63x45x55-White Delrin
+
+
+Part2-20x15x25-Brass(2pcs)
+Part6-D6x11-Brass-strug
+Part7-D6x8-Brass-strug
+
+
+Part5-dxf-laser-akril 2mm
+Part8-dxf-laser-akril 2mm
+Part9-dxf-laser-akril 2mm

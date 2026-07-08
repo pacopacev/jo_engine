@@ -1,0 +1,15 @@
+﻿"Symbol";"Value";"Unit";
+"REFERENCE";"211-1";"";
+"MATERIAL";"Galvanized Steel";"";
+"SUPPLIER";"KUKAMET";"";
+"MASS";"155";"g";
+"TraceParts.PartNumber";"90-04012018-034550";"";
+"TraceParts.PartLanguage";"en";"";
+"DESIGN";"Size: 1 Vertical Toggle Clamp on horizontal mounting base";"";
+"TraceParts.InstanceId";"90-04012018-034550690ZDBBX5AC6UVSE4NT6DLIIA";"";
+"TraceParts.PartTitle";"Vertical Toggle Clamp on horizontal mounting base";"";
+"TraceParts.PartVersion";"1.0.5";"";
+"TRACEPARTS";"TRACEPARTS";"";
+"TraceParts.PartStatusId";"";"";
+"TraceParts.ClassPath";"KUKAMET:90-04012018-034550";"";
+"TraceParts.PartStatus";"Published";"";

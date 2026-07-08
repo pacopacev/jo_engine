@@ -1,0 +1,10 @@
+7297 9196 40 + 7047 9025 30_MA10.21.79100A
+
+Cutting Block:
+Part1- 75x45x58 - Grey Delrin 60mm MA10.16.08623
+Part2- 75x45x30 - Grey Delrin 30mm MA10.16.07974
+Part3- 75x45x20 - Grey Delrin 20mm MA10.16.07958
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z47-Stainless Steel-Strug

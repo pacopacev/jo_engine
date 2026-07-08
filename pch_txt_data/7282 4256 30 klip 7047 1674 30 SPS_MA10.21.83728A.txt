@@ -1,0 +1,5 @@
+7282 4256 30 klip 7047 1674 30 SPS_MA10.21.83728A
+
+Color and material:Black Delrin
+
+Cutting Block:68x66x84

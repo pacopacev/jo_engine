@@ -1,0 +1,1204 @@
+[Dlg_G00] 
+Format : G00 X(U)_ Z(W)_ ;
+  X(U): X axis direction end point(diameter) ,
+      X absolute coordinate ,U incremental coordinate 
+  Z(W): Z axis direction end point(radius) 
+      Z absolute coordinate ,W incremental coordinate  
+
+Rapid Travel(G00) explanations :
+  1. Rapid speed to specified point X(U)Z(W)
+
+[Dlg_G01]
+Format : G01 X(U)_Z(W) ,A_,R_,C_ F_:
+  X,Z : For an absolute command ,coordinates of an end point 
+  U,W : For an incremental command ,distance the tool moves.
+  ,A : horizontal angle input 
+  ,R : add a radius R arc at end corner 
+  ,C : add a chamffer C at end corner 
+  F : G94 mm/min ,G95 mm/rev 
+
+explanations :
+1. A tool move along a line to the specified point X,Z at the 
+feedrate specified in F 
+2. The feedrate commanded by the F code is measured along the
+tool path 
+
+
+[Dlg_G02]
+Format : G02 X(U)_Z(W)_I_J_R_,R_F_;
+  X(U) : Command values of X axis 
+  X: absolute coordinate of end point,U:distance to end point: 
+  Z(W) : Command values of Z axis 
+  Z: absolute coordinate of end point,W:distance to end point: 
+  I_ : X axis distance from the start point to the center of an arc
+       with sign ,radius value
+  J_ : Y axis distance from the start point to the center of an arc
+       with sign ,radius value
+  R_ : Arc radius with no sign(always with radius value)
+  ,R_ : add a radius R arc at end corner 
+  F_ : Feedrate along the arc
+
+Circular interpolation(G02) explanation :
+  1. The command below will move a tool along a circular arc.
+  2. When XpYpZp are omitted(the end point is the same as the start point)
+
+    
+[Dlg_G03]
+Format : G03 X(U)_Z(W)_I_J_R_,R_F_;
+  X(U) : Command values of X axis 
+  X: absolute coordinate of end point,U:distance to end point: 
+  Z(W) : Command values of Z axis 
+  Z: absolute coordinate of end point,W:distance to end point: 
+  I_ : X axis distance from the start point to the center of an arc
+       with sign ,radius value
+  J_ : Y axis distance from the start point to the center of an arc
+       with sign ,radius value
+  R_ : Arc radius with no sign(always with radius value)
+  ,R_ : add a radius R arc at end corner 
+  F_ : Feedrate along the arc
+
+Circular interpolation(G03) explanation :
+  1. The command below will move a tool along a circular arc.
+  2. When XpYpZp are omitted(the end point is the same as the 
+    start point)
+
+
+[Dlg_G04]
+Format : G04 X_ ;
+X : dwell time (sec)(range : 0.001¡ã9999.999)
+Dwell(G04) explanation :
+  By specifying a dwell ,the execution of the next block
+  is delayed by the specified time X_ 
+
+[Dlg_G10]
+Format : G10 L_P_R_ ;
+Changing of tool offset value G10
+Explanation  : 
+
+  SYNTEC CNC is not ready 1999/5/21
+
+[Dlg_G12.1]
+Format : G12.1;
+polar interpolation start
+
+[Dlg_G13.1]
+Format : G13.1;
+polar interpolation stop
+
+[Dlg_G17]
+Format : G17
+Explanation : 
+  XY plane select ,on selected plane can execute G02/G03
+
+[Dlg_G18]
+Format : G18
+Explanation : 
+  ZX plane select ,on selected plane can execute G02/G03
+
+ [Dlg_G19]
+Format : G19
+Explanation :
+ YZ plane select ,on selected plane can execute G02/G03
+
+
+[Dlg_G20]
+Outer Diameter/Internal Diameter Cutting Cycle
+TypeA
+Format : G90 X(U)_ Z(W)_ R_ F_;
+
+TypeB
+Format : G77 X(U)_ Z(W)_ R_ F_;
+
+TypeC
+Format : G20 X(U)_ Z(W)_ R_ F_;
+
+  X(U)Z(W) : path2 end point coordinate 
+  R : taper cutting X direction height(radius)
+  F : cutting speed
+Explanation : 
+  Path 1. X direction rapid travel from start point
+   to point X_ ;
+  Path 2. Z direction cutting speed G01 to Z axis 
+   end point Z_;
+  Path 3. Z direction rapid travel to point X_;
+  Path 4. Z direction rapid travel to start 
+   point X0,Z0;
+
+[Dlg_G21]
+Thread Cutting Cycle
+Type A
+Format : G92 X(U)_ Z(W)_ R_ F_E_;
+
+Type B
+Format : G78 X(U)_ Z(W)_ R_ F_E_;
+
+Type C
+Format : G21 X(U)_ Z(W)_ R_ F_E_;
+
+  X(U)Z(W) : path2 end point coordinate 
+  R : taper cutting X direction height(radius)
+  F : thread pitch in metric (unit: mm/pitch) 
+  E : thread pitch in inch input (unit: pitch/inch)
+Explanation : 
+  Path 1. X direction rapid travel from start point
+    to point X_ ;
+  Path 2. Z direction thread cutting  G33 to Z axis
+    end point Z_;
+  Path 3. Z direction rapid travel to point X_;
+  Path 4. Z direction rapid travel to start point X0,Z0;
+
+
+
+[Dlg_G24]
+End Face turning Cycle
+Type A
+Format : G94 X(U)_ Z(W)_ R_ F_;
+
+Type B
+Format : G79 X(U)_ Z(W)_ R_ F_;
+
+Type C
+Format : G24 X(U)_ Z(W)_ R_ F_;
+
+  X(U)Z(W) : path2 end point coordinate 
+  R : taper cutting X direction height(radius)
+  F : cutting speed
+Explanation : 
+  Path 1. Z direction rapid travel from start point 
+      to point Z_ ;
+  Path 2. X direction cutting speed G01 to X axis 
+      end point X_;
+  Path 3. Z direction rapid travel to point Z_;
+  Path 4. X direction rapid travel to start point
+       X0,Z0;
+
+[Dlg_G28]
+Format : G28 P_X(U)_Z(W)_ ;
+  X¡BZ¡Gintermediate point absolute coordinate
+  U¡BW¡Gdistance to intermediate point 
+  P1¡Gmachine home 
+  P2¡G2nd reference point
+  P_ : no P augument means P1
+Explanation :
+  1. G00 speed to Intermediate point X_Z_;
+  2. G00 speed to reference point n(Pn  ) ;
+
+<note> for safety reason ,before execute G28
+ ,must cancel tool compensation first(G40,G49)¡C
+
+[Dlg_G29]
+Format : G29 X(U)_Z(W)_ ;
+  X¡BZ¡Gabsolute coordinate of end point
+  U¡BW¡Gdistance to end point 
+Explanation :
+  1. G00 speed to Intermediate point of G28
+  2. G00 speed to end point X_Z_;
+
+<note> for safety reason ,before execute G29
+ ,must execute G29 first¡C
+
+ [Dlg_G30]
+Format : G30 P_X(U)_Z(W)_ ;
+  X¡BZ¡Gintermediate point absolute coordinate
+  U¡BW¡Gdistance to intermediate point 
+  P1¡Gmachine home 
+  P2¡G2nd reference point
+......
+P_ : no P augument means P2
+Explanation :
+  1. G00 speed to Intermediate point X_Z_;
+  2. G00 speed to reference point n(Pn  ) ;
+
+<note> for safety reason ,before execute G30
+ ,must cancel tool compensation first(G40,G49)¡C
+
+[Dlg_G33]
+Type A
+Format : G32 X(U)_ Z(W)_ F_E_;
+
+Type B
+Format : G33 X(U)_ Z(W)_ F_E_;
+
+Type C
+Format : G33 X(U)_ Z(W)_ F_E_;
+
+  X(U)Z(W) : end point of thread cutting 
+  F : lead of the long axis(unit : mm/pitch) 
+  E : lead of the long axis(unit : pitch/inch)
+Explanation  : 
+  1. from start point thread cutting to end point
+  2. in general ,thread cutting is reaped along
+     the same tool path
+
+
+[Dlg_G40]
+Format : G40 ;
+Explanation  : Tool nose compensation cancel¡C
+
+[Dlg_G41]
+Format  : G41 
+Explanation  : Tool nose left compensation¡C
+
+[Dlg_G42]
+Format : G42
+Explanation : Tool nose right compensation¡C
+
+[Dlg_G43]
+Format : G43 
+Explanation¡GTool length positive direction compensate ¡C
+
+[Dlg_G44]
+Format : G44 
+Explanation¡GTool length negative direction compensation¡C
+
+[Dlg_G49]
+Format : G49
+Explanation¡GTool length compensation cancel¡C
+
+[Dlg_G52]
+Format : G52 X_Y_Z_ ;
+Explanation  :
+  X,Y,Z ¡Gworkpiece coordinate shift distance(absolute) .
+  G52 is effective only in auto mode 
+
+[Dlg_G70]
+Type A
+Format : G20
+
+Type B
+Format : G20
+
+Type C
+Format : G70
+
+Explanation : input in "INCH" G70 :
+  When inch/mm setting is changed ,CNC will take care
+  the whole dimension treatment ,including parameter ,
+  tool data ,home position ......,and input unit also 
+  change as below :
+    1.MMI position ,speed display unit
+    2.incremental jog unit
+    3.MPG incremental unit
+
+[Dlg_G71]
+Type A
+FORMAT  : G21
+
+Type B
+FORMAT  : G21
+
+Type C
+FORMAT  : G71
+
+Explanation : input in "mm" G71 :
+  When inch/mm setting is changed ,CNC will take care
+  the whole dimension treatment ,including parameter ,
+  tool data ,home position ......,and input unit also
+  change as below :
+   1.MMI position ,speed display unit
+   2.incremental jog unit
+   3.MPG incremental unit
+
+
+[Dlg_G72]
+Type A
+Format : G70 P_Q_;
+
+Type B
+Format : G70 P_Q_;
+
+Type C
+Format : G72 P_Q_;
+
+  P : Sequence number of the first block for 
+     the program of finishing shape .
+  Q : Sequence number of the last block for 
+     the program of finishing shape .
+Explanation :
+  The move command between  P,Q block sequence NO.
+   ,always use after G73 / G74 / G75 multiple
+   repetitive cycle ,after these G code ,G72
+   execute final finish cutting 
+NOTE :
+ 1¡GAny F,S,T function in G73,G74,G75 contained in
+   blocks  P_ to Q_ in the cycle is ignored . and the
+   F,S,T function in this G72 block is effective .
+ 2. G72 BLOCK must be specified with block sequence NO.
+ 3. G72,G73,G74,G75 in blocks P_ to Q_ ,can not use 
+    subroutine call(M98)
+ 4. when G72 finish cycle is finished ,tool will go back 
+    to start point and proceed next block . 
+
+[Dlg_G73]
+Format :
+G73.1 P_ Q_ U_ W_ D_ E_ F_ S_ T_;
+ P : Sequence number of the first block for the program
+    of finishing shape .
+ Q : Sequence number of the last block for the program 
+    of finishing shape .
+ U : Distance and direction of finishing allowance
+    in X direction 
+ W : Distance and direction of finishing allowance
+    in Z direction
+ D : Depth of cut(radius designation) ,designate 
+    without sign . The cutting direction depends
+    on the direction AA .the designation is modal 
+    and not changed until the other value is
+    designated .also this value can be specified
+    by the parameter(NO.4013) .
+ E : Escaping amount 
+  This designation is modal and is not changed until
+  the other value is designed . Also this value can 
+  be specified by the parameter(No.4012) .
+ F,S,T : Any F,S,T function contained in blocks ns to
+    nf in the cycle is ignored . and the F,S,T 
+    function in this G73.1 block is effective .
+
+Format :
+Type A
+G71 U_ R_ ;    // G71 modal parameter
+G71 P_Q_U_W_F_S_T_; // executing parameter
+
+Type B
+G71 U_ R_ ;    // G71 modal parameter
+G71 P_Q_U_W_F_S_T_; // executing parameter
+
+Type C
+G73 U_ R_ ;    // G73 modal parameter
+G73 P_Q_U_W_F_S_T_; // executing parameter
+
+ U : Depth of cut(radius designation) ,designate 
+    without sign . The cutting direction depends
+    on the direction AA .the designation is modal 
+    and not changed until the other value is
+    designated .also this value can be specified
+    by the parameter(NO.4013) .
+ R : Escaping amount 
+  This designation is modal and is not changed until
+  the other value is designed . Also this value can 
+  be specified by the parameter(No.4012) .
+ P : Sequence number of the first block for the program
+    of finishing shape .
+ Q : Sequence number of the last block for the program 
+    of finishing shape .
+ U : Distance and direction of finishing allowance
+    in X direction 
+ W : Distance and direction of finishing allowance
+    in Z direction
+ F,S,T : Any F,S,T function contained in blocks ns to
+    nf in the cycle is ignored . and the F,S,T 
+    function in this G73 block is effective .
+Explanation :
+ 1. There are two types of stock removals in turning
+   : TYPE I and II
+ 2. TYPE I : 
+   *. If a finished shape is monotone increase or
+      decrease along the X axis
+  *. Only one axis is specified in the first block
+     of a repetitive portion
+ 3. TYPE II :
+   *. The profile need not show monotone increase or 
+      decrease along the X axis 
+   *. Two axis are specified in the first block of a  
+      repetitive portion
+ 4. The first block does not include Z motion  and type II
+    is to be used ,W0 must be specified .
+
+[Dlg_G74]
+Format: 
+G74.1 P_ Q_ U_ W_ T_ S_ F_ D_ E_;
+ P : Sequence number of the first block for the program of 
+    finishing shape .
+ Q : Sequence number of the last block for the program of
+    finishing shape .
+ U : Distance and direction of finishing allowance in
+    X direction 
+ W : Distance and direction of finishing allowance in Z 
+    direction
+ D : Depth of cut(radius designation) ,designate without
+    sign .the designation is modal and not changed until
+    the other value is designated .also this value can 
+    be specified by the parameter(NO.4013) .
+ E : Escaping amount 
+   This designation is modal and is not changed until the 
+   other value is designed . Also this value can be 
+   specified by the parameter(No.4012) .
+ F,S,T : Any F,S,T function contained in blocks ns to nf in
+    the cycle is ignored . and the F,S,T function in this G73
+    block is effective .
+
+Format: 
+Type A
+G72 W(d) R(e) ;    // G72 modal parameter
+G72 P_Q_U_W_F_S_T_; // executing parameter
+
+Type B
+G72 W(d) R(e) ;    // G72 modal parameter
+G72 P_Q_U_W_F_S_T_; // executing parameter
+
+Type C
+G74 W(d) R(e) ;    // G74 modal parameter
+G74 P_Q_U_W_F_S_T_; // executing parameter
+
+ d : Depth of cut(radius designation) ,designate without
+    sign .the designation is modal and not changed until
+    the other value is designated .also this value can 
+    be specified by the parameter(NO.4013) .
+ e : Escaping amount 
+   This designation is modal and is not changed until the 
+   other value is designed . Also this value can be 
+   specified by the parameter(No.4012) .
+ P : Sequence number of the first block for the program of 
+    finishing shape .
+ Q : Sequence number of the last block for the program of
+    finishing shape .
+ U : Distance and direction of finishing allowance in
+    X direction 
+ W : Distance and direction of finishing allowance in Z 
+    direction
+ F,S,T : Any F,S,T function contained in blocks ns to nf in
+    the cycle is ignored . and the F,S,T function in this G73
+    block is effective .
+ Explanation :
+  1. The tool path between P_Q_ sequence must be steadily 
+    increasing and decreasing and decreasing pattern in 
+    both X and Z direction
+  2. Where the cutting along path is G00 or G01 mode is
+    determinated by the command between P_Q_ path.
+
+[Dlg_G75]
+Format : 
+G75.1 P_ Q_ U_ W_ T_ S_ F_ I_ K_ D_;
+  P : Sequence number of the first block for the program
+    of finishing shape .
+  Q : Sequence number of the last block for the program 
+    of finishing shape .
+  U : Distance and direction of finishing allowance in 
+    X direction 
+  W : Distance and direction of finishing allowance in 
+    Z direction
+  F,S,T : Any F,S,T function contained in blocks P_ to Q_ in
+    the cycle is ignored . and the F,S,T function in this
+    G73 block is effective .
+  I : Distance and direction of relief in the X axis 
+    direction(Radius designation) This designation 
+    is modal and is not changed until the other value
+    is designated ,this value can be specified by 
+    the parameter(NO.4015) .
+  K : Distance and direction of relief in the Z axis 
+    direction(Radius designation) This designation
+    is modal and is not changed until the other value 
+    is designated  ,this value can be specified by 
+    the parameter(NO.4016).
+  D : The number of division ,this value is the same as 
+    the repetitive count for rough cutting ,This 
+    designation is modal and is not changed until the 
+    other value is designated  ,this value can be 
+    specified by the parameter(NO.4017).
+
+
+Format : 
+Type A
+G73 U(i) W(k) R(d) ;    // G73 modal parameter
+G73 P_Q_U_W_F_S_T_; // executing parameter
+
+Type B
+G73 U(i) W(k) R(d) ;    // G73 modal parameter
+G73 P_Q_U_W_F_S_T_; // executing parameter
+
+Type C
+G75 U(i) W(k) R(d) ;    // G75 modal parameter
+G75 P_Q_U_W_F_S_T_; // executing parameter
+
+  i : Distance and direction of relief in the X axis 
+    direction(Radius designation) This designation 
+    is modal and is not changed until the other value
+    is designated ,this value can be specified by 
+    the parameter(NO.4015) .
+  k : Distance and direction of relief in the Z axis 
+    direction(Radius designation) This designation
+    is modal and is not changed until the other value 
+    is designated  ,this value can be specified by 
+    the parameter(NO.4016).
+  d : The number of division ,this value is the same as 
+    the repetitive count for rough cutting ,This 
+    designation is modal and is not changed until the 
+    other value is designated  ,this value can be 
+    specified by the parameter(NO.4017).
+  P : Sequence number of the first block for the program
+    of finishing shape .
+  Q : Sequence number of the last block for the program 
+    of finishing shape .
+  U : Distance and direction of finishing allowance in 
+    X direction 
+  W : Distance and direction of finishing allowance in 
+    Z direction
+  F,S,T : Any F,S,T function contained in blocks P_ to Q_ in
+    the cycle is ignored . and the F,S,T function in this
+    G73 block is effective .
+Explanation :
+1. The tool path between P_Q_ sequence must be steadily 
+   increasing and decreasing and decreasing pattern in
+   both X and Z direction
+2. Where the cutting along path is G00 or G01 mode is 
+      determinated by the command between P_Q_ path.
+
+[Dlg_G76]
+G76.1 X(U) Z(W) P_ Q_ R_ E_ F_;
+ X: component of point B 
+ U: incremental amount from A to B
+ Z: component of point C
+ W: incremental amount of A to C
+ P: Movement amount in X direction(without sign)
+ Q: Depth of cut in Z direction(without sign)
+ R: Relief amount of the tool at the cutting bottom.
+   The sign of d is always plus(+). However ,if address
+   X(U) and P_ are omitted ,the relief direction can be specified 
+   by the desired sign.
+ E: Return amount 
+   This designation is modal and is not changed until 
+   the other value is designated .Also this value can 
+   be specified by the parameter NO.4011 .
+ F: feedrate 
+
+Format : End Face Peck Drilling cycle
+Type A
+G74 R(e)_ ;
+G74 X_Z_P(i)Q(k)R(d)F_;
+
+Type B
+G74 R(e)_ ;
+G74 X_Z_P(i)Q(k)R(d)F_;
+
+Type C
+G76 R(e)_ ;
+G76 X_Z_P(i)Q(k)R(d)F_;
+
+ R(e): Return amount 
+   This designation is modal and is not changed until 
+   the other value is designated .Also this value can 
+   be specified by the parameter NO.4011 .
+ X: component of point B 
+ U: incremental amount from A to B
+ Z: component of point C
+ W: incremental amount of A to C
+ P: Movement amount in X direction(without sign)
+ Q: Depth of cut in Z direction(without sign)
+ R(d): Relief amount of the tool at the cutting bottom.
+   The sign of d is always plus(+). However ,if address
+   X(U) and P_ are omitted ,the relief direction can be specified 
+   by the desired sign.
+ F: feedrate 
+
+Explanation :
+  1. This G code generate the cutting path show in figure .
+  2. Chip breaking is possible in this cycle as shown . 
+  3. If X(U) and pare omitted ,operation only in the Z axis results 
+    ,to be used for drilling.
+
+[Dlg_G77]
+Format : 
+G77.1 X(U) Z(W) P_ Q_ R_ E_ F_;
+  X: component of point B 
+  U: incremental amount from A to B
+  Z: component of point C
+  W: incremental amount of A to C
+  P: Movement amount in X direction(without sign)
+  Q: Depth of cut in Z direction(without sign)
+  R: Relief amount of the tool at the cutting bottom.
+     The sign of d is always plus(+). However ,if address
+  X(U) and P_ are omitted ,the relief direction can be specified 
+   by the desired sign.
+  E: Return amount 
+     This designation is modal and is not changed until 
+     the other value is designated .Also this value can 
+     be specified by the parameter NO.4011 .
+  F: feedrate 
+
+
+Format : Outer Diameter /Internal Diameter Drilling cycle(G77)
+Type A
+G75 R(e)_ ;
+G75 X_Z_P(i)Q(k)R(d)F_;
+
+Type B
+G75 R(e)_ ;
+G75 X_Z_P(i)Q(k)R(d)F_;
+
+Type C
+G77 R(e)_ ;
+G77 X_Z_P(i)Q(k)R(d)F_;
+
+  R(e): Return amount 
+     This designation is modal and is not changed until 
+     the other value is designated .Also this value can 
+     be specified by the parameter NO.4011 .
+  X: component of point B 
+  U: incremental amount from A to B
+  Z: component of point C
+  W: incremental amount of A to C
+  P: Movement amount in X direction(without sign)
+  Q: Depth of cut in Z direction(without sign)
+  R(d): Relief amount of the tool at the cutting bottom.
+     The sign of d is always plus(+). However ,if address
+  X(U) and P_ are omitted ,the relief direction can be specified 
+   by the desired sign.
+  F: feedrate 
+Explanation :
+  1. This G code generate the cutting path show in figure .
+  2. This is equivalent to G74 except that X is replaced by Z. 
+  3. Chip breaking is possible in this cycle as shown . 
+  4. And grooving in X axis and peck drilling in X axis(in this
+     case Z,W, and Q are omitted)are possible.
+
+[Dlg_G78]
+//[Dlg_G78.1]
+Multiple Thread Cutting cycle(G78.1):
+Format :
+   G78.1 X(U)_Z(W)_R_P_Q_F_E_A_B_C_D_K_;
+Modal Parameter :(first block)
+   K : Repetitive count in finishing(1to 99)
+       This value can be specified by the parameterNO.4044
+   C ¡GChamfering amount(0-99) ,0.1L increment .
+       This value can be specified by the parameterNO.4043
+   Z ¡GAngle of tool tip(80,60,55,30,29,0) 
+       This value can be specified by the parameterNO.4042
+   D ¡GMinimum cutting depth(specified by the radius value)
+       This value can be specified by the parameterNO.4045
+   B ¡GFinishing allowance 
+       This value can be specified by the parameterNO.4041
+
+One Shot Parameter (second block)
+   X(U)Z(W) : threading cutting end point
+   R(i): Difference of thread radius if I=0 ,ordinary straight 
+         thread cutting can be made
+   P(k) : Height of thread (specified by the radius value)
+   Q(d) : Depth of cut in 1st cut(radius value)
+   F: Lead of thread(mm/pitch)
+   E: Lead of thread(pitches/inch)
+
+Explanation :
+  1st Rough cutting : 
+   1. Tool tip from start point(S) ,Rapid travel to 1st depth D
+   2. Threading cutting to Z_ coordinate
+   3. Rapid travel extracting to start X coordinate
+   4. Rapid travel go to start point S
+
+  2nd to Nth rough cutting :
+   1. From start point (S) ,rapid travel to Nth cutting position
+   2. Threading cutting to coordinate Z 
+   3. Rapid travel extract to Start X(X direction)
+   4. Rapid travel go to start point(S)
+
+  Precision cutting : 
+   1. From start point(S) ,rapid travel to precision dimension
+      (X direction to X coordinate)
+   2. Threading cutting to end point Z. 
+   3. Rapid travel extracting to X coordinate (X direction)
+   4. Rapid travel go to start point S
+
+NOTE : alarm message would appear :
+  1. a angle is not selected as below(a=0,29,30,55,60,80)
+
+
+Multiple Thread Cutting cycle(G78):
+Format :
+   Type A
+   G76 P(m)(r)(a)Q(d)R(d);  //Modal code 
+   G76 X(U)_Z(W)_R_P_Q_F_E_S_;  // One shot code
+ 
+   Type B
+   G76 P(m)(r)(a)Q(d)R(d);  //Modal code 
+   G76 X(U)_Z(W)_R_P_Q_F_E_S_;  // One shot code
+ 
+   Type C
+   G78 P(m)(r)(a)Q(d)R(d);  //Modal code 
+   G78 X(U)_Z(W)_R_P_Q_F_E_S_;  // One shot code
+
+ Modal Parameter :(first block)
+  P¡G
+   m : Repetitive count in finishing(1to 99)
+      This value can be specified by the parameterNO.4044
+   r ¡GChamfering amount(0-99) ,0.1L increment .
+      This value can be specified by the parameterNO.4043
+   a ¡GAngle of tool tip(80,60,55,30,29,0) 
+      This value can be specified by the parameterNO.4042
+   Q(d)¡GMinimum cutting depth(specified by the radius value)
+      This value can be specified by the parameterNO.4045
+   R(d)¡GFinishing allowance 
+      This value can be specified by the parameterNO.4041
+
+One Shot Parameter (second block)
+   X(U)Z(W) : threading cutting end point
+   R(i): Difference of thread radius if I=0 ,ordinary straight 
+        thread cutting can be made
+   P(k) : Height of thread (specified by the radius value)
+   Q(d) : Depth of cut in 1st cut(radius value)
+   F: Lead of thread(mm/pitch)
+   E: Lead of thread(pitches/inch)
+
+Explanation :
+  1st Rough cutting : 
+    1. Tool tip from start point(S) ,Rapid travel to 1st depth D
+    2. Threading cutting to Z_ coodinate
+    3. Rapid travel extracting to start X coordinate
+    4. Rapid travel go to start point S
+
+  2nd to Nth rough cutting :
+    1. From start point (S) ,rapid travel to Nth cutting position
+    2. Threading cutting to coordinate Z 
+    3. Rapid travel extract to Start X(X direction)
+    4. Rapid travel go to start point(S)
+
+  Precision cutting : 
+    1. From start point(S) ,rapid travel to precision dimension
+       (X direction to X coordinate)
+    2. Threading cutting to end point Z. 
+    3. Rapid travel extracting to X coordinate (X direction)
+    4. Rapid travel go to start point S
+
+NOTE : alarm message would appear :
+  1. a angle is not selected as below(a=0,29,30,55,60,80)
+  
+[Dlg_G83]
+X(U)  C  or Z(W)  C  ¡GHole position data
+Z(W)  C  or X(U)  C  ¡GThe distance from point R to the bottom of the hole
+R  ¡GThe distance from the initial level to point R level
+Q  ¡GDepth of cut for each cutting feed
+P  ¡GDwell time (s) at the bottom of a hole
+F  ¡Gcutting federate
+K  ¡GNumber of repeats
+M  ¡GM code for C axis clamp¡AC axis unclamp when Clamp Code add 1 (Unclamp Code)
+
+[Dlg_G84]
+X(U)  C  or Z(W)  C  ¡GHole position data
+Z(W)  C  or X(U)  C  ¡GThe distance from point R to the bottom of the hole
+R  ¡GThe distance from the initial level to point R level
+P  ¡GDwell time (s) at the bottom of a hole
+F  ¡Gcutting federate
+K  ¡GNumber of repeats
+M  ¡GM code for C axis clamp¡AC axis unclamp when Clamp Code add 1 (Unclamp Code)
+
+[Dlg_G85]
+X(U)  C  or Z(W)  C  ¡GHole position data
+Z(W)  C  or X(U)  C  ¡GThe distance from point R to the bottom of the hole
+R  ¡GThe distance from the initial level to point R level
+P  ¡GDwell time (s) at the bottom of a hole
+F  ¡Gcutting federate
+K  ¡GNumber of repeats
+M  ¡GM code for C axis clamp¡AC axis unclamp when Clamp Code add 1 (Unclamp Code)
+
+[Dlg_G87]
+X(U)  C  or Z(W)  C  ¡GHole position data
+Z(W)  C  or X(U)  C  ¡GThe distance from point R to the bottom of the hole
+R  ¡GThe distance from the initial level to point R level
+Q  ¡GDepth of cut for each cutting feed
+P  ¡GDwell time (s) at the bottom of a hole
+F  ¡Gcutting federate
+K  ¡GNumber of repeats
+M  ¡GM code for C axis clamp¡AC axis unclamp when Clamp Code add 1 (Unclamp Code)
+
+
+[Dlg_G88]
+X(U)  C  or Z(W)  C  ¡GHole position data
+Z(W)  C  or X(U)  C  ¡GThe distance from point R to the bottom of the hole
+R  ¡GThe distance from the initial level to point R level
+P  ¡GDwell time (s) at the bottom of a hole
+F  ¡Gcutting federate
+K  ¡GNumber of repeats
+M  ¡GM code for C axis clamp¡AC axis unclamp when Clamp Code add 1 (Unclamp Code)
+
+
+[Dlg_G89]
+X(U)  C  or Z(W)  C  ¡GHole position data
+Z(W)  C  or X(U)  C  ¡GThe distance from point R to the bottom of the hole
+R  ¡GThe distance from the initial level to point R level
+P  ¡GDwell time (s) at the bottom of a hole
+F  ¡Gcutting federate
+K  ¡GNumber of repeats
+M  ¡GM code for C axis clamp¡AC axis unclamp when Clamp Code add 1 (Unclamp Code)
+
+[Dlg_G90]
+Format : G90 
+Explanation : absolute coordinate is specified
+
+[Dlg_G91]
+Format : G91 
+Explanation : absolute coordinate is specified
+¡C
+
+[Dlg_G92]
+Type A
+Format  : G50 X(U)_Z(W)_S_ ;
+
+Type B
+Format  : G92 X(U)_Z(W)_S_ ;
+
+Type C
+Format  : G92 X(U)_Z(W)_S_ ;
+
+X,Z : absolute coordinate system setting 
+U,W : incremental coordinate system shift setting 
+S : spindle speed setting (unit : r.p.m.)
+
+Explanation :
+1. Coordinate system setting always use tool
+   coordinate shift U,W 
+2. S code specified max. spindle speed ,always 
+   use in G96
+
+[Dlg_G94]
+Type A
+Format : G98 F_;
+
+Type B
+Format : G94 F_;
+
+Type C
+Format : G94 F_;
+
+F : feedrate setting ,unit : mm/min
+Explanation  : 
+G94 : per minute feed ,specified feedrate type 
+     mm/min ,in this modal G code ,G01/G02/G03
+     feedrate is depend on time ,and independ on
+     spindle speed.
+
+[Dlg_G95]
+Type A
+Format : G99 F_;
+
+Type B
+Format : G95 F_;
+
+Type C
+Format : G95 F_;
+
+F : feedrate setting ,unit : mm/rev
+Explanation  : 
+G94 : per revolution feed ,specified feedrate type
+    mm/rev ,in this modal G code ,G01/G02/G03 feedrate
+    is depend on spindle speede ,and independ on time.
+
+[Dlg_G96]
+Format : G96 S_ ;
+S : cutting surface speed ,unit: m/min or feet/min
+Explanation :
+G96 : constant surface speed control , specified the 
+surface speed(relative speed between the tool and 
+workpiece) following S. The spindle is rotated so 
+that the surface speed is constant regardless of 
+the position of the tool. 
+
+ [Dlg_G97]
+Format : G97 S_ ;
+S : constant spindle speed setting ,unit: r.p.m.
+Explanation :
+G97 constant surface speed control cancel ,specified 
+the spindle speed ,The spindle is rotated so that the
+ spindle speed is constant r.p.m.
+
+[NetSetting Standard]
+Standard Network Setting¡G
+
+Controller name¡G	
+	Name of controller in network, can't same with other PC or 
+	controller, default name is CNC
+
+IP Address¡G	
+	IP address of controller, can't same with other PC or controller
+	default value is 210 20 98 21
+	Setting suggestion
+	(1)when using 1 - 1 method to connect to remote PC, modify IP 
+	   Address of remote PC to 210 20 98 20
+	(2)when in local network, get IP Address from netowrk manager
+
+Net Mask¡G	
+	Net Mask of controller, default value is 255 255 255 0
+	Setting suggestion
+	(1)when using 1 - 1 method to connect to remote PC, modify Net 
+	   Mask of remote PC to 255 255 255 0
+	(2)when in local network, get Net Mask from netowrk manager
+
+PC Name¡G	
+	Remote PC name, default name is Young
+	Setting suggestion
+	(1)when using 1 - 1 method to connect to remote PC, modify 
+	   computer name of remote PC to Young
+	(2)when in local network, get PC name from netowrk manager
+
+Dir Name¡G	
+	Sharing resource of remote PC that controller connected to, 
+	default name is Public
+	Setting suggestion
+	(1)when using 1 - 1 method to connect to remote PC, modify 
+	   sharing resource name of remote PC to Public
+	(2)when in local network, get Dir name from netowrk manager
+	
+Domain Network Setting¡G
+	(1)Change remote PC login method from domain to workgroup
+	(2)Using standard network setting method to connect PC and 
+	   controller
+	(3)Change remote PC login method form workgroup to domain
+
+[NetSetting Advance]
+Workgroup¡G
+	Workgroup name of controller, default name is SYNTEC
+	Setting suggestion
+	(1)when using 1 - 1 method to connect to remote PC, modify 
+	   workgroup of remote PC to SYNTEC
+	(2)when in local network, get Workgroup from netowrk manager
+
+Disable DHCP¡G
+	Disabled DHCP function, default value is 1¡Gclose
+	Setting suggestion
+	(1)when using 1 - 1 method to connect to remote PC, using 
+	   default value
+	(2)when in local network, and has DHCP server, user can set
+	   value to 0: open, enable DHCP function
+
+Reset password¡G
+	When power on controller, it will using passowrd setting of
+	CNC user to login controller, when first setting,using enter
+	key to skip password request, if password has been setting, 
+	it will stop to ask password in boot sequence.
+	User can input 1 in this field, it will clear password data
+	and request password setting when reboot
+
+CNC user ¡G
+	User name using to login controller, it also using to login
+	to remote PC, default name is CNC
+
+PC password¡G
+	Password using to connect to remote PC, default is space, 
+	in general case, it doesn't need password
+
+[Position]
+This is position help screen
+Please 'Enter' help information for diginput screen here...
+
+[Program]
+¤@¡BG code list
+ITEM              		   FUNCTION explanation
+-----------------------------	   -------------------      
+TypeA	    TypeB	TypeC		
+G00	    G00		G00                Rapid position
+G01	    G01		G01                Linear interpolation
+G02	    G02		G02                Circular interpolation "CW"
+G03	    G03		G03                Circular interpolation "CCW"
+G04	    G04		G04                Dwell
+G12.1	    G12.1	G12.1              Polar Interpolation start
+G13.1	    G13.1	G13.1              Polar Interpolation stop
+G17	    G17		G17                Set XY working plane
+G18	    G18		G18                Set ZX working plane
+G19	    G19		G19                Set YZ working plane
+G90	    G77		G20                Outer diameter / internal diameter
+                   			   cutting cycle
+G92	    G78		G21                Thread cutting cycle
+G94	    G79		G24                Endface turnning cycle
+G28	    G28		G28                Reference point return
+G29	    G29		G29                Go back from reference point
+G30	    G30		G30                2nd¡A3rd¡A4th reference point return
+G32	    G33		G33                Thread cutting
+G40	    G40		G40                Tool radius compensation off
+G41	    G41		G41                Tool radius left compensation
+G42	    G42		G42                Tool radius right compensation
+G43	    G43		G43                Tool length compensation(+)
+G44	    G44		G44                Tool length compensation(-)
+G49	    G49		G49                Tool length compensation cancel
+G52	    G52		G52                Local coordinate system setting
+G53	    G53		G53                Machine coordinate system setting
+G54..G59    G54..G59	G54..G59           Work coordinate system setting
+G65	    G65		G65                Macro call
+G66	    G66		G66                Modal macro call
+G67	    G67		G67                Modal macro call cancel
+G20	    G20		G70                input in inch
+G21	    G21		G71                input in mm
+G70	    G70		G72                Finishing cycle
+G71	    G71		G73                Stock removal in turning
+G72	    G72		G74                Stock removal in facing
+G73	    G73		G75                Pattern repeating
+G74	    G74		G76                End face peck drilling
+G75	    G75		G77                Outer diameter / internal diameter
+                   			   drilling cycle
+G76	    G76		G78                Multiple thread cutting cycle
+G80	    G80		G80                Canned cycle for drilling cancel
+G83	    G83		G83                Canned cycle for drilling
+G84	    G84		G84                Cycle for face tapping
+G85	    G85		G85                Cycle for face boring
+G87	    G87		G87                Cycle for side drilling
+G88	    G88		G88                Cycle for side tapping
+G89	    G89		G89                Cycle for side boring
+G90	    G90		G90                Absolute position command input
+G91	    G91		G91                Incremental position command input
+G50	    G92		G92                Coordinate system setting
+G98	    G94		G94                Feed per minute.(mm/min)
+G99	    G95		G95                Feed per revolution(mm/rev)
+	    G96		G96                Constant surface speed
+	    G97		G97                Constant surface speed cancel
+	    G98		G98                Return to initial point in canned cycle
+	    G99		G99                Return to R point in canned cycle
+
+
+¤G¡BM code list 
+ITEM      FUNCTION DESCRIPTION
+------     ----------------         ---------------------------------
+M00         Program stop
+M01         Optional program stop
+M02         Program end
+M03         Spindle CW
+M04         Spindle CCW
+M05         Spindle STOP
+M08         Coolant (1) ON
+M09         Coolant (1) OFF
+M10         Spindle chuck CLOSE
+M11         Spindle chuck OPEN 
+M12         Optional Skip ON 
+M13         Spindle CW+Coolant (1) ON 
+M14         Spindle CCW+Coolant (1) ON 
+M15         Spindle STOP+Coolant (1) OFF
+M19         C axis mode
+M20         Spindle mode
+M23         Side milling tool CW
+M24         Side milling tool CCW
+M25         Side milling tool STOP
+M28         Coolant (2) ON
+M29         Coolant (2) OFF
+M30         Program ends¡Areturn to start point 
+M33         Front side milling tool CW
+M34         Front side milling tool CCW              
+M35         Front side milling tool STOP                 
+M39         Spindle Oriettation ON
+M40         Air blow ON
+M41         Air blow OFF
+M42         Parts catcher ON
+M43         Parts catcher OFF+Parts conveyor ON 
+M50         Spindle brake ON 
+M51         Spindle brake OFF 
+M52         Spindle Oriettation Pin ON 
+M53         Spindle Oriettation Pin OFF 
+M60         Air blow (2) ON 
+M61         Air blow (2) OFF 
+M71         Spindle&Milling Synchronization (1)
+M72         Spindle&Milling Synchronization (2)
+M73         Spindle&Milling Synchronization (3)
+M74         Spindle&Milling Synchronization (4)
+M75         Spindle&Milling Synchronization OFF
+M81         Spindle chuck open (bar end again feed)
+M87         Manual bar feeder  
+M88         Auto bar feeder 
+M97         Count+1
+M98         Call subroutine
+M99         Return to main program
+
+2012-09-21 HELP-C03.8
+
+[Dlginput]
+This is dlginput help screen
+Please 'Enter' help information for dlginput screen here...
+
+[Monitor]
+This is monitor help screen
+Please 'Enter' help information for dlginput screen here...
+
+[Parameter]
+This is parmm help screen
+Please 'Enter' help information for dlginput screen here...
+
+
+[Maintence]
+This is maintence help screen
+Please 'Enter' help information for dlginput screen here...
+
+[Guide]
+
+Please 'Enter' help information for Maintence screen here...
+
+[ToolSetting]
+X axis tool offset(length) :
+  Measure input:
+1. Spindle on ,By manual operation or MPG handle feed 
+  ,Z direction to cut workpiece
+2. Z direction extract from workpiece 
+3. Measure workpiece diameter of cutting surface , set
+  this value as the measured value along the X-axis for
+  the desired offset number .
+4. The offset value is automatically calculated and setted .
+5. According the tool tip position "upper + ,down - " 
+  designate the value sign
+EX: tool tip  position is located X+ area ,this value
+    is positive .
+
+Direct absolute input : 
+1. execute manual reference positon return .
+2. Tool position offset values can be set by manual moving 
+  the tool until it touches the workpiece coordinate zero .
+3. Input machine coordinate of current position to desired
+  tool X offset value
+EX: A **.***
+
+Incremental tool offset values input :
+1. after tool offset values is set and a little bit error
+2. use incremental offset input to adjust tool values
+EX: I **.*** 
+
+Z AXIS tool offset values :
+ Measure input:
+1. Spindle on ,By manual operation or MPG handle feed ,X 
+   direction to cut workpiece
+3. X direction extract from workpiece 
+4. set "ZERO SHIFT" value to Z axis tool offset of the
+  desired offset number .
+5. The offset value is automatically calculated and setted .
+6. According the tool tip position "right+ ,left-"
+  designate the value sign
+EX: tool tip  position is located Z+ area ,this value 
+    is positive .
+
+Direct absolute input : 
+1.execute manual reference positon return .
+2. Tool position offset values can be set by manual moving
+   the tool until it touches the workpiece coordinate zero .
+3. Input machine coordinate of current position to desired 
+   tool X offset value
+EX: A **.***
+
+Incremental tool offset values input :
+1. after tool offset values is set and a little bit error
+2. use incremental offset input to adjust tool values
+EX: I **.*** 
+
+X,Z AXIS tool wear compensate
+1. compensate sign rules : 
+"the same sign with the tool tip desired adjust direction "
+EX1: tool is located at X+ area ,and workpiece machining 
+    size too large. Tool tip should be X- direction adjust
+    ,then tool wear compensation should be negative .
+EX2 : tool is located at Z+ area ,and workpiece machining 
+    size too large. Tool tip should be Z- direction adjust
+    ,then tool wear compensation should be negative .
+2. X tool wear compensate is diameter designation
+3. Z tool wear compensate is radius designation
+
+
+[WorkpieceCoordinateSystemShift]
+Workpiece coordinate system shift Setting
+
+System default is increment input
+When NC file execute G92, it will change the shift amount
+
+Increment Input
+¡@Move cursor to X or Z field, key in shift value and press input key.
+¡@System will calculate input value and old shift value and absolute 
+¡@coordinate, then fill and update shift amount of X or Z field
+
+New shift amount calculate¡G
+	New Shift = Old Shift + ABS coord ¡V Input Value
+
+Absolute Input
+¡@key in X*** or Z*** to Input line, then press Input key, it will fill and 
+¡@update shift amount of X or Z field
+
+After input, X and Z shift amount will be fill to system shift amount (#1901, #1903)
+
+

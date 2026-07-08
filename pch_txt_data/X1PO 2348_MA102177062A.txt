@@ -1,0 +1,15 @@
+X1PO 2348_MA10.21.77062A
+
+Color and Material:Brown Delrin
+
+Cutting Block:
+
+Part 1:55x55x56
+Part 2:55x55x30
+Part 3:55x55x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm
+
+Part 5: Ф8-Z47.25-lathe (струг)
+
+

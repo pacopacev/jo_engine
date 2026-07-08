@@ -1,0 +1,9 @@
+7198 8102 30+7274 2686_MA10.21.73027B
+
+Cutting Block:
+Part1-51x50x52-White Delrin
+Part2-51x50x30-White Delrin
+Part3-51x50x20-White Delrin
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z43.1-Stainless Steel-Strug

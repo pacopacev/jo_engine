@@ -1,0 +1,19 @@
+PPI0001650 MA2137857A
+
+A 000 540 66 01
+
+ASSY CA288A15199XXX
+
+
+Color and Material:Yellow Delrin
+
+Cutting Block: 
+
+Part 1:58x39x50
+Part 2:58x39x30
+Part 3:58x39x20
+
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5: Ф8  -lathe (струг)

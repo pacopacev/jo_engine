@@ -1,5 +1,5 @@
 import math
-
+import json
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
@@ -236,6 +236,17 @@ ORDER BY jo.job_order_number ASC"""
                         
                         sheet_appendix['I3'] = f"{job_order_number}"
                         
+                        
+                        
+                        data_json = json.loads(description) if description and description != "N/A" else {}
+                        start_row = 23
+                        for i, (key, value) in enumerate(data_json.items(), start=start_row):
+                            pair = f"{key}: {value}"
+                            key_without_brackets = pair.replace('"', '').replace('}', '').replace('{', '')
+                            sheet_appendix[f"B{i}"] = key_without_brackets
+                            
+                            
+                        
         
                         for idx_child, child_info in enumerate(child_info_set.values(), 1):
                             row_num = idx_child + 5  # Start from row 6 in appendix
@@ -250,6 +261,8 @@ ORDER BY jo.job_order_number ASC"""
                             child_quantity = int(child_info.get("child_quantity", 0)) if child_info.get("child_quantity", 0) else 0
                             sheet_appendix[f"K{row_num}"] = child_quantity * quantity  # Total quantity needed based on parent quantity
                             sheet_appendix[f"H{row_num}"] = child_info.get("process_cut", "") or child_info.get("process_mill", "")
+                            
+                            
                             
                         wb_appendix.save(output_path_appendix)
                         wb_appendix.close()
@@ -307,6 +320,24 @@ def add_child_parts(row_childrens, id):
         product_id = global_model.safe_int(row_child[0]) if row_child[0] else None
         ma_number = global_model.safe_str(row_child[1]) if row_child[1] else "N/A"
         product_name = global_model.safe_str(row_child[2]) if row_child[2] else "N/A"
+        description = global_model.safe_str(row_child[3]) if row_child[3] else "N/A"
+        
+        # data_json = json.loads(description) if description and description != "N/A" else {}
+        # for key in data_json.keys():
+        #     value = data_json[key]
+        #     print(f"{key}: {value}")
+        
+        # pin0_dia = str(data_json['pin0']['dia'])
+        # pin0_length = str(data_json['pin0']['length'])
+        # pin1_dia = str(data_json['pin1']['dia'])
+        # pin1_length = str(data_json['pin1']['length'])
+
+        # print(pin0_dia)
+        # print(pin0_length)
+        # print(pin1_dia)
+        # print(pin1_length)  
+          
+        # is_assembly = global_model.safe_bool(row_child[4])
         part_id = global_model.safe_int(row_child[5]) if row_child[5] else None
         part_number = global_model.safe_str(row_child[6]) if row_child[6] else "N/A"
         child_dimension_x = global_model.safe_float(row_child[7]) if row_child[7] else 0.0
@@ -326,6 +357,7 @@ def add_child_parts(row_childrens, id):
             "product_id": product_id,
             "ma_number": ma_number,
             "product_name": product_name,
+            "description": description,
             "part_id": part_id,
             "child_ma_number": part_number,
             "child_dimension_x": child_dimension_x,

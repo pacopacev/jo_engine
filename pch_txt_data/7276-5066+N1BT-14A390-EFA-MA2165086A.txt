@@ -1,0 +1,15 @@
+7276-5066+N1BT-14A390-EFA-MA2165086A
+
+
+Color and Material:Black Delrin
+
+Cutting Block:CNC
+
+Part 1:69x59x60
+Part 2:69x59x30
+Part 3:69x59x20
+
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5: Ф8  -lathe (струг)

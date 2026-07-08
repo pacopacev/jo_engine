@@ -1,0 +1,12 @@
+7198 6004 30+7198 7625 30+7274 2611 90_CCB_MA10.21.83658C
+
+Color and Material:Blue Delrin
+Cutting Block:
+
+Part 1:87x77x54
+Part 2:87x77x30
+Part 3:87x77x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5-Ф8-Z-44.6-lathe (струг)
+

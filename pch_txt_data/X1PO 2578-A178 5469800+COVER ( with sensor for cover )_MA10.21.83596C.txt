@@ -1,0 +1,24 @@
+X1PO 2578-A178 5469800+COVER_MA10.21.80669A
+
+Cutting Block:
+
+Part1-105x74x60-White Delrin
+Part2-115x78x60-White Delrin
+Part3-115x90x60-White Delrin
+Part4-90x46x74-White Delrin
+Part5-35x25x30-White Delrin
+Part6-31x28x40-White Delrin(2pcs)
+Part7-268x120x40-White Delrin
+Part8-35x25x22-White Delrin
+Part12-75x35x50-White Delrin
+Part13-67x35x40-White Delrin
+Part14-65x35x46-White Delrin
+
+
+Part9-20x15x25-Brass(3pcs)
+
+Part10-3D Print-White PLA
+Part11-3D Print-White PLA(2pcs)
+
+
+https://aliteh.bg/bg-product-details-1801.html#variant=2645

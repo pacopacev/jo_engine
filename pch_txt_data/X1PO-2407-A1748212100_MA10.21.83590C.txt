@@ -1,0 +1,14 @@
+X1PO-2408-A1748212200+A1748212400_MA10.21.8
+
+
+Cutting Block:
+Part1-246x173x80-White Delrin
+Part2-246x173x50-White Delrin
+Part4-70x35x37-White Delrin
+Part5-35x25x22-White Delrin
+Part6-45x35x50-White Delrin
+
+
+Part3-20x15x25-Brass(2pcs)
+
+

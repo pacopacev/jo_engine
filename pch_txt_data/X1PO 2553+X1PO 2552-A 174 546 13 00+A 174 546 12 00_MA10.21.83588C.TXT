@@ -1,0 +1,23 @@
+X1PO 2553+X1PO 2552-A 174 546 13 00+A 174 546 12 00_MA10.21.79667A
+
+Cutting Block
+Part1-338x208x80-White Delrin
+Part2-208x104x75-White Delrin
+Part3-192x104x75White Delrin
+Part4-70x30x37-White Delrin
+Part5-108x35x37-White Delrin
+
+Part6-20x16x25-Brass
+Part7-20x15x25-Brass
+
+
+
+With sensor !!!
+
+Part8-34x34x70-White Delrin
+
+
+Without sensor!!!
+
+Part9-44x32x32-White Delrin
+

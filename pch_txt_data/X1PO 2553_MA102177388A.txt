@@ -1,0 +1,17 @@
+X1PO 2553-A1745 4613 00_MA102177388A
+
+Cutting Block:
+
+Part1-197x79x90-White Delrin
+Part2-120x80x80-White Delrin
+Part3-197x79x34-White Delrin
+Part4-120x80x34-White Delrin
+Part5-340x139x40-White Delrin
+Part6-69x29x37-White Delrin
+Part9-109x34x37-White Delrin
+Part10-35x25x22-White Delrin
+
+Part7-20x15x30-Brass
+Part8-20x15x30-Brass
+
+

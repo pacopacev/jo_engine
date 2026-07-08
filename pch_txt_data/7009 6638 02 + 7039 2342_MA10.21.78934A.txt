@@ -1,0 +1,12 @@
+7009 6638 02 + 7039 2342_MA10.21.78934A
+
+Cutting Block:
+Part1-65x48x58-White Delrin 60mm_MA10.16.08537
+Part2-65x48x30-White Delrin 30mm_MA10.16.01907
+Part3-65x48x20-White Delrin 20mm_MA10.16.01908
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z47-Stainless Steel-Strug
+Part6-Stainless Steel-Strug
+

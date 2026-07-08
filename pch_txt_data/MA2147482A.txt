@@ -1,0 +1,63 @@
+rachna mashina za navivane na kabel D220
+o1011
+baraban
+310 X 310 X 60 RYAZAN
+Yellow delrin
+S DOPALNITALNA BAZA ZA HVASHTANE NA MASHINA ¹8
+42MM PO X I Y OSI
+T20 F20 Z-47.5
+T14 D6 Z-50
+T10 D4.2 Z-50
+T9 D3.2 Z-50
+T1 F10 Z-48
+T2 F6 Z -48
+T5 R4 Z -1.6
+
+
+ZA FREZOVANE NA CENTARA
+izrabotka flanec
+o1017
+130 X 130 X 30
+T20 F20 Z-0
+T8 D5.2Z -35
+
+
+rachna_mashina_za_navivane
+o1021
+planka_za_lager
+White delrin
+250 X 145 X 40 RYAZAN
+T20 F20 Z-30.5
+T1 F10 Z-30.1
+T5 R4 Z -1.6
+
+
+rachna_mashina_za_naviva
+o1031
+agal
+White delrin
+125 X 45 X 25 YRYAZAN
+
+T20 F20 Z-15.5
+T5 R4 Z-1.6
+
+rachna_mashina_za_naviva
+o1032
+otvor_za_oblepyane
+AGAL 28.1"
+T2 F6 Z-25
+
+agal montajni otvori
+15 X 40 X 120
+T8 D5.2 Z-25
+
+rachna_mashina_za_naviva
+o1041
+drajka
+135 X 30 X 25 RYAZAN
+T20 F20 Z-12.5
+T1 F10 Z-12.5
+T2 F6Z -10
+T3 F3 Z-10
+T10 D4.2 Z-14
+T5  R4 Z-1.6

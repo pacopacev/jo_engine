@@ -1,0 +1,8 @@
+ASSY_AMZ005-DC0E_MA10.21.83181B
+
+Cutting Block:
+Part1-61x40x47-Green Delrin
+
+Part2-61x40x30-Green Delrin
+
+Part3-61x40x20-Green Delrin

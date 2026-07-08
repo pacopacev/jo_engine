@@ -1,0 +1,13 @@
+ASSY_AMZ005DC0F_MA10.21.73075A
+
+Color and Material:Brown Delrin
+
+Cutting Block:
+Part 1:57x39x47
+Part 2:57x39x30
+Part 3:57x39x20
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5: Ф8x38-lathe (струг)
+

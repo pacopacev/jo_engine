@@ -1,0 +1,9 @@
+7052 1614 30 MA10.21.96572A
+
+Cutting Block:
+Part1-30x30x60-Green Delrin
+
+Part2-44x21x24-Yellow Delrin
+
+Part3-Stainless Steel-1mm-Lazer
+

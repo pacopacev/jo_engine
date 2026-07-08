@@ -1,0 +1,13 @@
+﻿"Symbol";"Value";"Unit";
+"TraceParts.PartNumber";"10-07082014-072077";"";
+"REFERENCE";"111-2";"";
+"TraceParts.PartTitle";"Body Mounting Base: Horizontal";"";
+"TraceParts.InstanceId";"10-07082014-072077EZ8NELRMB0GSOBKLT8FB00SBZ";"";
+"DESIGN";"Body Mounting Base: Horizontal";"";
+"TraceParts.PartStatus";"Published";"";
+"TraceParts.PartStatusId";"";"";
+"SUPPLIER";"KUKAMET";"";
+"TraceParts.PartVersion";"1.0.8";"";
+"TRACEPARTS";"TRACEPARTS";"";
+"TraceParts.PartLanguage";"en";"";
+"TraceParts.ClassPath";"KUKAMET:/F_KUKAMET/10-07082014-072077";"";

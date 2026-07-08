@@ -1,0 +1,6 @@
+ASSY_7298 5488 70_MA10.21.82280A
+
+Cutting Block:42x31x43
+
+Color and Material-Yellow Delrin
+

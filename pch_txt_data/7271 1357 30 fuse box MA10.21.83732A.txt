@@ -1,0 +1,18 @@
+7271 1357 30 fuse box MA10.21.83732A
+
+Cutting Block- 260 x 179 x 33
+Material-White Delrin
+
+Part3-
+Cutting Block 260x175x28 -White Delrin
+
+Milling Block:
+Part1-50x20x23-White Delrin
+Part2-48x26x20-White Delrin
+Part4-45x16x20-White Delrin
+Part5-57x26x20-White Delrin
+Part6-59x27x16-White Delrin
+Part7-29x24x19-White Delrin
+
+Part8-246x170x10-Lazer and CNC
+Part10-96x84x10-Lazer and CNC

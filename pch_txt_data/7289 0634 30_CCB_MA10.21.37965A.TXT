@@ -1,0 +1,14 @@
+7289 0634 30_CCB_MA10.21.37965A
+
+Color and Material:Black Delrin
+Cutting Block:
+
+Part 1:61x55x48
+Part 2:61x55x30
+Part 3:61x55x20
+
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm 
+Part 5-Ф8-Z-34-lathe (струг)
+
+

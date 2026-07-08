@@ -1,0 +1,7 @@
+7052 7141 30_Clip_MA2147401A
+
+Milling Block:42x37x25
+
+Color and Material:Black Delrin
+
+Program 03038 is with TAP M4

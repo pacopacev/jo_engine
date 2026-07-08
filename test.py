@@ -1,73 +1,115 @@
+
 import os
-
-import socket
-
-computer_name = socket.gethostname()
-print(f"Running on computer: {computer_name}")
-
-name = "7283600430+7283600530A"
-print(len(str(name)))
-
-if(len(str(name)) == 8):
-    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10]
-    print(new_name)
-elif(len(str(name)) == 10):
-    new_name = name[0:4] + " " + name[4:8]
-    print(new_name)
-elif(len(str(name)) == 20 and name[10:11] == "+"): #7283 2233 60 + 7283 2233A
-    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + name[19:20]
-    print(new_name) 
-elif(len(str(name)) == 21 and name[10:11] == "+"): #7283 6004 30 + 7283 6005 30
-    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21]
-    print(new_name)  
-elif(len(str(name)) == 22 and name[10:11] == "+"): #7283 2233 60 + 7283 2233 60A
-    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21] + name[21:22]
-    print(new_name)   
-elif(len(str(name)) == 31 and name[10:11] == "+"): #7283 6004 30 + 7283 6005 30 + 7283 2244A
-    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21] + " " + name[21:22] + " " + name[22:26] + " " + name[26:30] + name[30:31]
-    print(new_name) 
-         
-elif(len(str(name)) == 33 and name[10:11] == "+"): #7283 6004 30 + 7283 6005 30 + 7283 2244 60A
-    new_name = name[0:4] + " " + name[4:8] + " " + name[8:10] + " " + name[10:11] + " " + name[11:15] + " " + name[15:19] + " " + name[19:21] + " " + name[21:22] + " " + name[22:26] + " " + name[26:30] + " " + name[30:33]
-    print(new_name)
-else:
-    print(name)
+import glob
+from pathlib import Path
+from datetime import datetime
+from utils import log, get_connection, safe_int, safe_datetime, safe_str, safe_bool, safe_float
+import shutil
 
 
-# file_path = "S:/JO"
-
-# # Use a list to store multiple job numbers
-# job_order_numbers = []
-
-# for file in os.listdir(file_path):
-#     if file.endswith(".xlsm") or file.endswith(".xlsx"):
-#         # os.listdir gives just the file name, so we can split it directly
-#         file_name_only, file_extension = os.path.splitext(file)   
+def getData(root_path, keywords):
+    matching_files = []
+    allowed_extensions = ["", ".txt"]  # Empty string = no extension
+    try:
+        keyword_strs = [str(k) for k in keywords]
         
-#         # Slice index 2 to 8 to get the JO number
-#         jo = file_name_only[2:8]
-#         job_order_numbers.append(jo)
+        for folder_path, subdirs, files in os.walk(root_path):
+            for filename in files:
+                file_ext = Path(filename).suffix  # e.g., ".txt" or ""
+                
+                # Only keep files with no extension OR .txt
+                if file_ext not in allowed_extensions:
+                    continue
+                
+                if any(kw in filename for kw in keyword_strs):
+                    full_path = os.path.join(folder_path, filename)
+                    matching_files.append(full_path)
+    except Exception as e:
+        print(f"Error occurred while fetching drawings: {e}")
+    return matching_files
 
-# # FIX: Put the [-1] inside the print function, attached to the list name
-# if job_order_numbers:
-#     next_job_number = None
 
-#     # Loop through the list BACKWARDS (starting from the last element)
-#     for job in reversed(job_order_numbers):
-#         # Clean up the element (convert to string just in case it's already an int)
-#         job_str = str(job).strip()
-        
-#         # Check if this specific item is a number
-#         if job_str.isdigit():
-#             next_job_number = int(job_str)
-#             break  # We found the last number! Exit the loop immediately.
+search_ids = [96564,
+77405,
+64080,
+70526,
+69492,
+77265,
+90091,
+53368,
+72966,
+83796,
+71225,
+38917,
+43815,
+43817,
+38043,
+37930,
+96690,
+69542,
+77033,
+63723,
+84415,
+73033,
+83586,
+77369,
+43822,
+43823,
+48627,
+71356,
+69559,
+72183,
+84747,
+72173,
+37808,
+79266,
+79308,
+79265,
+90094,
+48718,
+37965,
+37987,
+38683,
+37986,
+37988,
+37885,
+37887,
+52058,
+83767,
+83757,
+77164,
+65867,
+73023,
+73032,
+73022,
+76952,
+80788,
+76951,
+37923,
+41552,
+73061,
+6977,
+77000,
+9113,
+43815
+]
+matching_files = getData(root_path="./", keywords=search_ids)
+print(matching_files)
 
-#     # Check if we successfully found a number anywhere in the list
-#     if next_job_number is not None:
-#         print(f"Next job order number: {next_job_number}")
-#     else:
-#         print("Warning: No valid numeric job order numbers found in the entire list.")
+BASE_OUTPUT_PATH = Path("C:\\Users\\plamendimitrov\\Desktop\\C-SUB H248 Main  + Engine CCBs\\data")
 
-# else:
-#     print("No .xlsx or .xlsm files found.")
-    
+
+batch_dir = BASE_OUTPUT_PATH
+batch_dir.mkdir(parents=True, exist_ok=True)
+
+if matching_files:
+                    # Create drawings subdirectory
+    drawings_dir = batch_dir / "text_files"
+    drawings_dir.mkdir(exist_ok=True)
+                    
+    for drawing_file in matching_files:
+        src_path = Path(drawing_file)
+        dst_path = drawings_dir / src_path.name
+        shutil.copy2(src_path, dst_path)
+                    
+                    

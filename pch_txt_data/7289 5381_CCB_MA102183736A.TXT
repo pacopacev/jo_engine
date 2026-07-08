@@ -1,0 +1,11 @@
+7289 5381_CCB_MA10.21.83736A
+
+Cutting Block:
+
+Part1-61x62x48-White Delrin
+Part2-61x62x30-White Delrin
+Part3-61x62x20-White Delrin
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z41-Stainless Steel-Strug

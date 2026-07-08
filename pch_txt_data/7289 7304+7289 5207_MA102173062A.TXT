@@ -1,0 +1,13 @@
+7289 7304+7289 5207_MA10.21.73062A
+
+Cutting Block:
+
+Part 1:67x64x94-White Delrin
+Part 2:67x64x30-White Delrin 
+Part 3:67x64x21-White Delrin 
+
+
+Part 4:DXF laser 2mm st. steel
+Part 5: d8x85 lathe/струг st. steel
+
+

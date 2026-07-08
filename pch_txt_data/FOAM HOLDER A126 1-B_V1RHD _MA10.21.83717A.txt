@@ -1,0 +1,7 @@
+FOAM HOLDER A126 1-B_V1RHD _MA10.21.83717A
+
+Cutting Block:
+
+Part1-81x40x76-Gray Delrin
+
+Part2-57x22x25-Aluminuim

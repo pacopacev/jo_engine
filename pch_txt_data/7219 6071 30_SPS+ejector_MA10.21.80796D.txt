@@ -1,0 +1,5 @@
+7219 6071 30_SPS+ejector_MA10.21.80796D
+
+Cutting block:111x61x60
+
+Color and Material:Black Delrin

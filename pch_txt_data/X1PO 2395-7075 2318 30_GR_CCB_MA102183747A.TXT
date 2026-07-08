@@ -1,0 +1,16 @@
+X1PO 2395-7075 2318 30_GR_CCB_MA10.21.83747A
+
+Cutting Block:
+Part6-126x90x30-Black Delrin
+
+Part2-20x15x25-Brass
+
+Part3-PLA Black
+
+Part4;Part7-Akril Opal-Lazer
+
+Part5-D6-Z5-Brass
+
+
+Milling Block:
+Part1-122x85x80-Black Delrin

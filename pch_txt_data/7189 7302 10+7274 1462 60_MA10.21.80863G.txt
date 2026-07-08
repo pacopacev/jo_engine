@@ -1,0 +1,11 @@
+7189 7302 10+7274 1462 60_MA10.21.80863G
+
+Cutting Block:Green Delrin
+
+Part1-65x55x53
+Part2-65x55x30
+Part3-65x55x20
+
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z43.5-Stainless Steel-Strug

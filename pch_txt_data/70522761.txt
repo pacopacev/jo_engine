@@ -1,0 +1,14 @@
+﻿"Symbol";"Value";"Unit";
+"REFERENCE";"BB-626-A500-70-ES";"";
+"TraceParts.PartVersion";"1.0.2";"";
+"SUPPLIER";"IGUS";"";
+"TraceParts.PartStatus";"Published";"";
+"ALLIED_STOCK_NUMBER";"70522761";"";
+"TraceParts.PartNumber";"10-12012018-112702";"";
+"TraceParts.PartLanguage";"en";"";
+"DESIGN";"Xiros ball bearing 626, stainless balls";"";
+"TraceParts.InstanceId";"10-12012018-1127029QQ48L5BM3ZASJBIGIZV8KQAD";"";
+"TraceParts.PartTitle";"Xiros ball bearing 626, stainless balls";"";
+"TRACEPARTS";"TRACEPARTS";"";
+"TraceParts.PartStatusId";"";"";
+"TraceParts.ClassPath";"ALLIED_ELECTRONICS:/ALLIED_ELECTRONICS/PSSS_428252/PSS_428608/PSF_428609/10-12012018-112702";"";

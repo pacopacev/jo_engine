@@ -1,0 +1,9 @@
+7185 1730 30+7185 1731 30+7274 2608_MA10.21.77013A
+
+Cutting Block:
+Part1-70x58x56-White Delrin
+Part2-70x58x30-White Delrin
+Part3-70x58x20-White Delrin
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z57-Stainless Steel-Strug

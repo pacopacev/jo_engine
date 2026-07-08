@@ -1,0 +1,13 @@
+7235 7582 30_MA10.21.82219A
+
+Cutting Block:
+
+Part 1:131x57x77-Black Delrin
+Part 2:131x57x40-Black Delrin
+Part 5:65x30x34-Black Delrin
+Part 6:20x15x32-Black Delrin
+Part 7:25x15x32-Black Delrin
+
+Part 3:20x15x36-Brass
+Part 4:20x15x25-Brass
+

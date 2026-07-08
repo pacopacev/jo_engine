@@ -1,0 +1,22 @@
+7176 9197 30+7176 9203 30_MA10.21.84406A
+
+
+Milling Block:
+Part1-220x140.5x80-White Delrin
+
+
+Cutting Block:
+Part2-181x165x80-White Delrin
+Part3-165x100x70-White Delrin
+PArt4-40x30x45-White Delrin
+Part5-225x145x40-White Delrin
+Part6-105x80x100-White Delrin
+Part8-301x164x40-White Delrin
+Part12-81x30x35-White Delrin-2pcs
+Part20-45x35x50-White Delrin
+
+Part9-20x15x25-Brass
+Part10-20x15x24-Brass
+Part11-20x15x29-Brass
+
+Part7-Stee-5mm-Lazer

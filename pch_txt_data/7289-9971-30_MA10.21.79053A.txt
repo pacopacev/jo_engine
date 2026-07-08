@@ -1,0 +1,15 @@
+7289-9971-30_MA10.21.79053A
+
+Color and Material:Black Delrin
+
+Cutting Block:
+
+Part 1:65x34x63
+Part 2:65x34x30
+Part 3:65x34x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm
+
+Part 5: Ф8-Z54.5-lathe (струг)
+
+

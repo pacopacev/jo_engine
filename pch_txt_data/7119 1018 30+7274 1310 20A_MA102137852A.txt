@@ -1,0 +1,9 @@
+7119 1018 30+7274 1310 20A
+
+Cutting Block:
+Part1-60x40x59-Red Delrin
+Part2-60x40x30-Red Delrin
+Part3-60x40x20-Red Delrin
+
+
+

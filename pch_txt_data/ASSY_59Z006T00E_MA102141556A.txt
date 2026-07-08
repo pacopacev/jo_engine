@@ -1,0 +1,10 @@
+ASSY_59Z006T00E_MA102141556A
+
+Cutting Block:Green Delrin
+
+Part1-48x40x54
+Part2-48x40x30
+Part3-48x40x20
+
+Part4-Stainless Steel-2mm-Lazer
+Part5-D8-Z44-Stainless Steel-Strug

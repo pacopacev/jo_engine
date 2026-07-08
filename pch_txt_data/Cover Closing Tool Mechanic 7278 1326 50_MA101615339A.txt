@@ -1,0 +1,15 @@
+Cover Closing Tool Mechanic 7278 1326 50_MA10.16.15339A
+
+
+Cutting Block:
+Part1-92x93x65-White Delrin
+Part2-96x58x66-White Delrin
+Part8-102x86x36-White Delrin
+
+MIlling Block:
+Part4-60x20x59-White Delrin
+Part5-60x20x59-White Delrin
+
+
+
+

@@ -1,0 +1,11 @@
+ASSY-59Z063DC0A_MA10.21.37924A
+
+Cutting Block:
+Part1-60x40x47-Black Delrin
+Part2-60x40x30-Black Delrin
+Part3-60x40x21-Black Delrin
+
+Part 4-DXF laser 2mm steel
+Part5-Ф8x41.5-Stainless Steel-Strug
+Pin PNM_MA10.16.01811-D8-Z37-Stainless Steel-Strug
+PNM Holder for switch-MA10.01.02415

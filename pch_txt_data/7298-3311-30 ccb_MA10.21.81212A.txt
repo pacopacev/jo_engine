@@ -1,0 +1,16 @@
+7298-3311-30 TEKNIK RESIM_MA10.21.81212A
+
+Color and Material:Black Delrin
+
+Cutting Block:
+
+Part 1:90x50x75
+Part 2:90x50x30
+Part 3:90x50x20
+
+Part 4-DXF-laser(лазер):Stainless steel-2mm
+
+Part 5: Ф8-Z61-lathe (струг) ПИНА ЗА КЛЮЧАЛКАТА
+ Е ПРОМЕНЕН  ОТ Ф8-Z59,3 В Ф8-Z61
+МОЛЯ,КОРИГИРАЙТЕ РЪЧНО В ЧЕРТЕЖА!!
+

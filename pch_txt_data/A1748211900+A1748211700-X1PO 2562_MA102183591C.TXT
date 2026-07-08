@@ -1,0 +1,23 @@
+A1748211900+A1748211700-X1PO 2562_MA10.21.80691A
+
+Milling Block:
+Part1-189x183x80.6-White Delrin
+
+Cutting Block:
+Part2-355x187x36-White Delrin
+Part5-55x30x37-White Delrin
+Part7-101x47x37-White Delrin
+Part8-53x30x37-White Delrin
+Part9-152x125x80-White Delrin
+Part10-152x125x38-White Delrin
+Part11-150x101x60-White Delrin
+Part12-150x101x39-White Delrin
+Part14-35x18x22-White Delrin
+
+
+Part3-20x20x25-Brass
+Part4-20x20x25-Brass
+Part6-20x15x25-Brass
+Part13-D6-Z16-Brass
+
+

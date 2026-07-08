@@ -1,0 +1,1 @@
+@c:\dos\loadsys /u c:\dos\di1000dd.sys > nul
