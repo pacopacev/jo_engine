@@ -1,5 +1,6 @@
 import math
 import json
+import re
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
@@ -11,7 +12,14 @@ import shutil
 from extract_drawings import getDrawing
 from globalModel import GlobalModel
 
-
+def format_value(value):
+    """Convert a value into a clean, readable string for spreadsheet display."""
+    if isinstance(value, dict):
+        return ", ".join(f"{k}: {v}" for k, v in value.items())
+    elif isinstance(value, list):
+        return ", ".join(str(item) for item in value)
+    else:
+        return str(value)
 global_model = GlobalModel()
 def print_job_orders(target_batch_id=None):
     
@@ -196,7 +204,7 @@ ORDER BY jo.job_order_number ASC"""
                 
                 
                 sheet['I38'] = type_code
-                # sheet['L11'] = description
+                
                 
                 new_name = global_model.name_replace(name)#слага интервали на името на продукта
                 # print(new_name)
@@ -215,6 +223,14 @@ ORDER BY jo.job_order_number ASC"""
                 elif process_mill:
                     sheet['L21'] = " ⚠️ ФРЕЗОВАНЕ       "
                     
+                # if is_assembly == False:
+                #     json_data = json.loads(description) if description and description != "N/A" else {}
+                    
+                #     dic_str = re.sub(r'["{}]', '', str(json_data))
+                    
+                        
+                #     sheet['N15'] = dic_str if dic_str != "N/A" else ""
+                   
                     
                 if id and is_assembly == True:
                     global_model.log(f"   🔍 Fetching child parts for product_id {id}")
@@ -236,16 +252,18 @@ ORDER BY jo.job_order_number ASC"""
                         
                         sheet_appendix['I3'] = f"{job_order_number}"
                         
-                        
-                        
                         data_json = json.loads(description) if description and description != "N/A" else {}
                         start_row = 23
+                        
                         for i, (key, value) in enumerate(data_json.items(), start=start_row):
-                            pair = f"{key}: {value}"
-                            key_without_brackets = pair.replace('"', '').replace('}', '').replace('{', '')
-                            sheet_appendix[f"B{i}"] = key_without_brackets
+                            key_clean = key.replace('"', '').replace('{', '').replace('}', '').replace("'", '')
+                            sheet_appendix[f"B{i}"] = key_clean
+
+                            value_clean = format_value(value).replace('"', '').replace('{', '').replace('}', '').replace("'", '')
+                            sheet_appendix[f"C{i}"] = value_clean
                             
                             
+
                         
         
                         for idx_child, child_info in enumerate(child_info_set.values(), 1):
