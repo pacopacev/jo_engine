@@ -252,15 +252,15 @@ ORDER BY jo.job_order_number ASC"""
                         
                         sheet_appendix['I3'] = f"{job_order_number}"
                         
-                        data_json = json.loads(description) if description and description != "N/A" else {}
-                        start_row = 23
+                        # data_json = json.loads(description) if description and description != "N/A" else {}
+                        # start_row = 23
                         
-                        for i, (key, value) in enumerate(data_json.items(), start=start_row):
-                            key_clean = key.replace('"', '').replace('{', '').replace('}', '').replace("'", '')
-                            sheet_appendix[f"B{i}"] = key_clean
+                        # for i, (key, value) in enumerate(data_json.items(), start=start_row):
+                        #     key_clean = key.replace('"', '').replace('{', '').replace('}', '').replace("'", '')
+                        #     sheet_appendix[f"B{i}"] = key_clean
 
-                            value_clean = format_value(value).replace('"', '').replace('{', '').replace('}', '').replace("'", '')
-                            sheet_appendix[f"C{i}"] = value_clean
+                        #     value_clean = format_value(value).replace('"', '').replace('{', '').replace('}', '').replace("'", '')
+                        #     sheet_appendix[f"C{i}"] = value_clean
                             
                             
 
