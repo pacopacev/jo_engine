@@ -186,6 +186,7 @@ ORDER BY jo.job_order_number ASC"""
                 sheet['D16'] = datetime.now().strftime("%Y-%m-%d")
                 sheet['D22'] = quantity
                 sheet['B18'] = project_name
+                sheet['B63'] = description
                 
                 if group_id and qty_per_group:
                     sheet['N27'] = dimension_x_g
@@ -223,13 +224,20 @@ ORDER BY jo.job_order_number ASC"""
                 elif process_mill:
                     sheet['L21'] = " ⚠️ ФРЕЗОВАНЕ       "
                     
-                # if is_assembly == False:
-                #     json_data = json.loads(description) if description and description != "N/A" else {}
+                # if is_assembly == True or is_assembly == False:
                     
-                #     dic_str = re.sub(r'["{}]', '', str(json_data))
-                    
+                #     if isinstance(description, dict):
+                #         print(json.loads(description))
+                #     else:
+                #         print("N/A")
                         
-                #     sheet['N15'] = dic_str if dic_str != "N/A" else ""
+                #     exit()
+                #     # json_data = json.loads(description) if description and description != "N/A" else {}
+                #     print(json_data)
+                #     # dic_str = re.sub(r'["{}]', '', str(json_data))
+                #     # print(dic_str)
+                        
+                #     # sheet['L15'] = dic_str if dic_str != "N/A" else ""
                    
                     
                 if id and is_assembly == True:
