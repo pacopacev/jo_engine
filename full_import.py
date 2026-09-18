@@ -100,7 +100,26 @@ def import_full_production_data(excel_file, target_batch_id=None):
             is_assembly = global_model.safe_bool(row.get('Is_Assembly', False))
             type_code = global_model.safe_str(row.get('type_code'))
             alt_name = global_model.safe_str(row.get('alt_name'))
+            project_name = global_model.safe_str(row.get('project_name'))
             
+            # Get or create project
+            project_id = None
+            if project_name:
+                cursor.execute("SELECT id FROM projects WHERE project_name = %s", (project_name,))
+                result = cursor.fetchone()
+                if result:
+                    project_id = result[0]
+                else:
+                    cursor.execute("""
+                        INSERT INTO projects (project_name, created_at, updated_at, created_by)
+                        VALUES (%s, NOW(), NOW(), %s)
+                        ON CONFLICT (project_name) 
+                        DO UPDATE SET 
+                        updated_at = NOW(),
+                        created_by = EXCLUDED.created_by
+                        RETURNING id
+                    """, (project_name, 'system'))
+                    project_id = cursor.fetchone()[0]
             # Get or create product type
             type_id = None
             if type_code:
@@ -136,8 +155,10 @@ def import_full_production_data(excel_file, target_batch_id=None):
                     updated_at = NOW()
                 RETURNING id
             """, (ma_number, product_name, description, is_assembly, type_id, 'import'))
+
             
             parent_id = cursor.fetchone()[0]
+            # print(parent_id)
             parent_products[ma_number] = parent_id
             stats['products'] += 1
             global_model.log(f"   ✅ Product saved: {ma_number} (id={parent_id})")

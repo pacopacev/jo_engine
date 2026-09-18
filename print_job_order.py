@@ -1,6 +1,8 @@
 import math
 import json
 import re
+from tkinter.font import Font
+from openpyxl.styles import Font
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
@@ -12,6 +14,7 @@ import shutil
 from extract_drawings import getDrawing
 from globalModel import GlobalModel
 
+
 def format_value(value):
     """Convert a value into a clean, readable string for spreadsheet display."""
     if isinstance(value, dict):
@@ -20,9 +23,13 @@ def format_value(value):
         return ", ".join(str(item) for item in value)
     else:
         return str(value)
+
+
 global_model = GlobalModel()
+
+
 def print_job_orders(target_batch_id=None):
-    
+
     job_order_query = """ 
 WITH details AS (
 SELECT p2.id, p2.ma_number, p.parent_id, p.dimension_x, p.dimension_y, p.dimension_z, p.color_id, p.material_id, c.color_name_bg, m.material_code, p2."name", p2.type_id, p2.description, pt.type_code, m.material_name_bg, p.process_cut, p.process_mill, p2.is_assembly from parts p
@@ -71,49 +78,44 @@ ORDER BY jo.job_order_number ASC"""
     ORDER BY p2.ma_number ASC
 """
 
-
-    
     if not target_batch_id:
         global_model.log("Batch ID is required to print job orders", "ERROR")
         return False
-    
+
     global_model.log(f"📋 Printing job orders for batch_id: {target_batch_id}")
     conn = global_model.conn
     if not conn:
         return False
-    
+
     try:
         # Create batch directory using batch_id
         BASE_OUTPUT_PATH = Path("S:/Exchange_Folder/JO/Batches")
         BASE_OUTPUT_PATH_JO = Path("S:/JO")
-        
+
         batch_dir = BASE_OUTPUT_PATH / str(target_batch_id)
         batch_dir.mkdir(parents=True, exist_ok=True)
         global_model.log(f"Working directory: {batch_dir.absolute()}")
-        
+
         # Path to template file
         template_path = Path("jo.xlsx")
         appended_template_path = Path("appendix.xlsx")  # "appendix.xlsx"
-        
+
         if not template_path.exists():
             global_model.log(f"Template file not found: {template_path}", "ERROR")
             return False
         if not appended_template_path.exists():
             global_model.log(f"Appended template file not found: {appended_template_path}", "ERROR")
             return False
-        
-        
+
         cursor = conn.cursor()
         cursor.execute(job_order_query, (target_batch_id,))
         # cursor.execute(job_order_query.format(target_batch_id=target_batch_id))//SQL injection risk if target_batch_id is not sanitized
         rows = cursor.fetchall()
-        
-        
-        
+
         if not rows:
             global_model.log("No data returned from query", "WARNING")
             return False
-        
+
         success_count = 0
         for idx, row in enumerate(rows, 1):
             try:
@@ -127,7 +129,7 @@ ORDER BY jo.job_order_number ASC"""
                 ma_number = global_model.safe_str(row[4]) if row[4] else ""
                 dimension_x = global_model.safe_float(row[6]) if row[6] else ""
                 dimension_y = global_model.safe_float(row[7]) if row[7] else ""
-                dimension_z = global_model.safe_float(row[8]) if row[8] else ""  
+                dimension_z = global_model.safe_float(row[8]) if row[8] else ""
                 color_name_bg = global_model.safe_str(row[11]) if row[11] else ""
                 name = global_model.safe_str(row[13]) if row[13] else ""
                 description = global_model.safe_str(row[15]) if row[15] else ""
@@ -143,137 +145,137 @@ ORDER BY jo.job_order_number ASC"""
                 qty_per_group = global_model.safe_int(row[25]) if row[25] else 0
                 group_id = global_model.safe_int(row[26]) if row[26] else 0
                 project_name = global_model.safe_str(row[27]) if row[27] else ""
-                
-                
-                
+
                 search_string = ma_number[6:]
-         
+
                 matyching_files = getDrawing(root_path=r'H:\drawings', keyword=search_string, extension=".pdf")
-                print(f"   🔍 Found {len(matyching_files)} matching drawing files for MA_Number {search_string}")  
+                print(f"   🔍 Found {len(matyching_files)} matching drawing files for MA_Number {search_string}")
                 # After finding matching files
                 if matyching_files:
                     # Create drawings subdirectory
                     drawings_dir = batch_dir / "drawings"
                     drawings_dir.mkdir(exist_ok=True)
-                    
+
                     for drawing_file in matyching_files:
                         src_path = Path(drawing_file)
                         dst_path = drawings_dir / src_path.name
                         shutil.copy2(src_path, dst_path)
-                    
+
                     global_model.log(f"   📄 Copied {len(matyching_files)} drawing(s) to {drawings_dir}")
-                
-                 
+
                 # Use job order number as filename
                 filename = f"{job_order_number}.xlsx"
                 output_path = batch_dir / filename
-                
+
                 # Copy template to new file
                 shutil.copy(template_path, output_path)
-                
+
                 # Open the workbook
                 wb = load_workbook(output_path)
                 sheet = wb.active
-                
+
                 # Just put data in cells - adjust cell references as needed
                 sheet['J16'] = job_order_number
                 sheet['E11'] = batch_id
                 sheet['B38'] = id
                 sheet['D38'] = ma_number
-                sheet['H38'] = color_name_bg
+
+                if color_name_bg == "ЧЕРВЕН":
+                    existing_font = sheet['H38'].font
+                    print(f"   🔍 Existing font for H38: {existing_font.name}, size: {existing_font.size}, bold: {existing_font.bold}, italic: {existing_font.italic}, color: {existing_font.color}")
+                    sheet['H38'].font = Font(
+                        name=existing_font.name,
+                        size=existing_font.size,
+                        bold=existing_font.bold,
+                        italic=True,
+                        underline="double",
+                        color=existing_font.color
+                    )
+                    sheet['H38'] = color_name_bg
+                    
+                else:
+                    
+                    sheet['H38'] = color_name_bg
+
                 sheet['E38'] = material_name_bg
                 sheet['D6'] = datetime.now().strftime("%Y-%m-%d")
                 sheet['D16'] = datetime.now().strftime("%Y-%m-%d")
                 sheet['D22'] = quantity
                 sheet['B18'] = project_name
                 sheet['B63'] = description
-                
+
                 if group_id and qty_per_group:
                     sheet['N27'] = dimension_x_g
                     sheet['N28'] = dimension_y_g
                     sheet['N29'] = dimension_z_g
                     sheet['J20'] = math.ceil(quantity / qty_per_group)
-                    
-                else:   
+
+                else:
                     sheet['N27'] = dimension_x
                     sheet['N28'] = dimension_y
                     sheet['N29'] = dimension_z
                     sheet['J20'] = quantity
-                    
-                    
-                
-                
-                
+
                 sheet['I38'] = type_code
-                
-                
-                new_name = global_model.name_replace(name)#слага интервали на името на продукта
+
+                new_name = global_model.name_replace(name)  # слага интервали на името на продукта
                 # print(new_name)
                 sheet['D10'] = new_name
                 # sheet['D10'] = name
-                
-                
+
                 sheet['G11'] = price_offer_num
-                
-                
-                
+
                 if process_cut and process_mill:
                     sheet['L21'] = "                   "
                 elif process_cut:
                     sheet['L21'] = " ⚠️ РЯЗАНЕ         "
                 elif process_mill:
                     sheet['L21'] = " ⚠️ ФРЕЗОВАНЕ       "
-                    
+
                 # if is_assembly == True or is_assembly == False:
-                    
+
                 #     if isinstance(description, dict):
                 #         print(json.loads(description))
                 #     else:
                 #         print("N/A")
-                        
+
                 #     exit()
                 #     # json_data = json.loads(description) if description and description != "N/A" else {}
                 #     print(json_data)
                 #     # dic_str = re.sub(r'["{}]', '', str(json_data))
                 #     # print(dic_str)
-                        
+
                 #     # sheet['L15'] = dic_str if dic_str != "N/A" else ""
-                   
-                    
+
                 if id and is_assembly == True:
                     global_model.log(f"   🔍 Fetching child parts for product_id {id}")
                     cursor.execute(query, (id,))
                     row_childrens = cursor.fetchall()
                     global_model.log(f"   📋 Found {len(row_childrens)} child parts")
                     sheet['S21'] = len(row_childrens)
-                    
-    
+
                     if row_childrens:
                         child_info_set = add_child_parts(row_childrens, id)
-        
+
                         # Create appendix file for child parts
                         filename_appendix = f"{job_order_number}_append_{id}.xlsx"
                         output_path_appendix = batch_dir / filename_appendix
                         shutil.copy(appended_template_path, output_path_appendix)
                         wb_appendix = load_workbook(output_path_appendix)
                         sheet_appendix = wb_appendix.active
-                        
+
                         sheet_appendix['I3'] = f"{job_order_number}"
-                        
+
                         # data_json = json.loads(description) if description and description != "N/A" else {}
                         # start_row = 23
-                        
+
                         # for i, (key, value) in enumerate(data_json.items(), start=start_row):
                         #     key_clean = key.replace('"', '').replace('{', '').replace('}', '').replace("'", '')
                         #     sheet_appendix[f"B{i}"] = key_clean
 
                         #     value_clean = format_value(value).replace('"', '').replace('{', '').replace('}', '').replace("'", '')
                         #     sheet_appendix[f"C{i}"] = value_clean
-                            
-                            
 
-                        
-        
                         for idx_child, child_info in enumerate(child_info_set.values(), 1):
                             row_num = idx_child + 5  # Start from row 6 in appendix
                             sheet_appendix[f"B{row_num}"] = child_info.get("part_id", "")
@@ -287,9 +289,7 @@ ORDER BY jo.job_order_number ASC"""
                             child_quantity = int(child_info.get("child_quantity", 0)) if child_info.get("child_quantity", 0) else 0
                             sheet_appendix[f"K{row_num}"] = child_quantity * quantity  # Total quantity needed based on parent quantity
                             sheet_appendix[f"H{row_num}"] = child_info.get("process_cut", "") or child_info.get("process_mill", "")
-                            
-                            
-                            
+
                         wb_appendix.save(output_path_appendix)
                         wb_appendix.close()
                         global_model.log(f"   ✅ Created appendix: {output_path_appendix}")
@@ -302,26 +302,27 @@ ORDER BY jo.job_order_number ASC"""
                 success_count += 1
                 global_model.log(f"✅ [{idx}/{len(rows)}] Created main: {output_path}")
                 wb.close()
-                
+
             except Exception as e:
                 global_model.log(f"❌ Error processing job order {row[0] if row else 'unknown'}: {str(e)}", "ERROR")
                 continue
-        
+
         cursor.close()
         conn.close()
-        
+
         global_model.log(f"✅ Successfully created {success_count} out of {len(rows)} job order files in {batch_dir}")
         return success_count > 0
-        
+
     except Exception as e:
         global_model.log(f"❌ Error in print_job_orders: {str(e)}", "ERROR")
         if conn:
             conn.close()
         return False
 
+
 def add_child_parts(row_childrens, id):
     print(f"   🔍 Found {len(row_childrens)} child parts for product_id {id}")
-    
+
     child_info_set = {}
     for row_child in row_childrens:
         # Use proper indexing based on the query order
@@ -342,17 +343,17 @@ def add_child_parts(row_childrens, id):
         # 13: material_name_bg
         # 14: quantity
         # 15: parent_id
-        
+
         product_id = global_model.safe_int(row_child[0]) if row_child[0] else None
         ma_number = global_model.safe_str(row_child[1]) if row_child[1] else "N/A"
         product_name = global_model.safe_str(row_child[2]) if row_child[2] else "N/A"
         description = global_model.safe_str(row_child[3]) if row_child[3] else "N/A"
-        
+
         # data_json = json.loads(description) if description and description != "N/A" else {}
         # for key in data_json.keys():
         #     value = data_json[key]
         #     print(f"{key}: {value}")
-        
+
         # pin0_dia = str(data_json['pin0']['dia'])
         # pin0_length = str(data_json['pin0']['length'])
         # pin1_dia = str(data_json['pin1']['dia'])
@@ -361,8 +362,8 @@ def add_child_parts(row_childrens, id):
         # print(pin0_dia)
         # print(pin0_length)
         # print(pin1_dia)
-        # print(pin1_length)  
-          
+        # print(pin1_length)
+
         # is_assembly = global_model.safe_bool(row_child[4])
         part_id = global_model.safe_int(row_child[5]) if row_child[5] else None
         part_number = global_model.safe_str(row_child[6]) if row_child[6] else "N/A"
@@ -375,10 +376,10 @@ def add_child_parts(row_childrens, id):
         child_material_name_bg = global_model.safe_str(row_child[13]) if len(row_child) > 13 and row_child[13] else "N/A"
         child_quantity = global_model.safe_int(row_child[14]) if len(row_child) > 14 and row_child[14] else 0
         parent_id = global_model.safe_int(row_child[15]) if len(row_child) > 15 and row_child[15] else None
-        
+
         # Use part_id as key, or part_number if part_id is None
         key = str(part_id) if part_id else part_number
-        
+
         child_info_set[key] = {
             "product_id": product_id,
             "ma_number": ma_number,
@@ -394,17 +395,12 @@ def add_child_parts(row_childrens, id):
             "child_quantity": child_quantity,
             "parent_id": parent_id
         }
-        
+
         if process_cut:
             print(f"   🔍 Child part {part_number} requires cutting process")
             child_info_set[key]["process_cut"] = "РЯЗАНЕ"
         if process_mill:
             print(f"   🔍 Child part {part_number} requires milling process")
             child_info_set[key]["process_mill"] = "ФРЕЗОВАНЕ"
-    
+
     return child_info_set
-
-
-
-        
-        
