@@ -102,7 +102,7 @@ def create_job_orders_from_batch(excel_file, target_batch_id=None):
             # Skip empty MA_Number (child rows)
             if not ma_number:
                 continue
-            
+            project_name = global_model.safe_str(row.get('project_name'), None)
             batch_id = global_model.safe_int(row.get('batch_id'), None)
             batch_name = global_model.safe_str(row.get('price_offer_num'), None)
             print(f"Processing MA_Number: {ma_number}, batch_id: {batch_id}, batch_name: {batch_name}")
@@ -124,6 +124,15 @@ def create_job_orders_from_batch(excel_file, target_batch_id=None):
             if combo in processed_combinations:
                 continue
             processed_combinations.add(combo)
+            
+            # Get project_id
+            cursor.execute("SELECT id FROM projects WHERE project_name = %s", (project_name,))
+            project_result = cursor.fetchone()
+            if not project_result:
+                global_model.log(f"   ⚠️ Project not found: {project_name}", "WARNING")
+                stats['errors'] += 1
+                continue
+            project_id = project_result[0]
             
             # Get product_id
             cursor.execute("SELECT id FROM products WHERE ma_number = %s", (ma_number,))
@@ -164,13 +173,13 @@ def create_job_orders_from_batch(excel_file, target_batch_id=None):
                 price_offer_num = None
             
             cursor.execute("""
-                INSERT INTO job_orders (
+                INSERT INTO job_orders (project_id,
                     job_order_number, batch_id, product_id, quantity,
                     status, priority, created_by, created_at, updated_at, price_offer_num
                 )
-                VALUES (%s, %s, %s, %s, 'pending', 'normal', %s, NOW(), NOW(), %s)
+                VALUES (%s, %s, %s, %s ,%s, 'pending', 'normal', %s, NOW(), NOW(), %s)
                 ON CONFLICT (job_order_number) DO NOTHING
-            """, (job_order_number, batch_id, product_id, quantity, 'job_import', price_offer_num))
+            """, (project_id, job_order_number, batch_id, product_id, quantity, 'job_import', price_offer_num))
             
             if cursor.rowcount > 0:
                 stats['job_orders'] += 1

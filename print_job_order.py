@@ -32,23 +32,52 @@ def print_job_orders(target_batch_id=None):
 
     job_order_query = """ 
 WITH details AS (
-SELECT p2.id, p2.ma_number, p.parent_id, p.dimension_x, p.dimension_y, p.dimension_z, p.color_id, p.material_id, c.color_name_bg, m.material_code, p2."name", p2.type_id, p2.description, pt.type_code, m.material_name_bg, p.process_cut, p.process_mill, p2.is_assembly from parts p
-LEFT JOIN products p2 ON p2.id = p.product_id
-LEFT JOIN colors c ON c.id = p.color_id
-LEFT JOIN materials m ON m.id = p.material_id
-LEFT JOIN product_type pt ON pt.id = p2.type_id
-WHERE p.parent_id is NULL
-ORDER BY p2.ma_number ASC
+    SELECT
+        p2.id,
+        p2.ma_number,
+        p.parent_id,
+        p.dimension_x,
+        p.dimension_y,
+        p.dimension_z,
+        p.color_id,
+        p.material_id,
+        c.color_name_bg,
+        m.material_code,
+        p2."name",
+        p2.type_id,
+        p2.description,
+        pt.type_code,
+        m.material_name_bg,
+        p.process_cut,
+        p.process_mill,
+        p2.is_assembly
+    FROM parts p
+    LEFT JOIN products p2 ON p2.id = p.product_id
+    LEFT JOIN colors c ON c.id = p.color_id
+    LEFT JOIN materials m ON m.id = p.material_id
+    LEFT JOIN product_type pt ON pt.id = p2.type_id
+    WHERE p.parent_id IS NULL
+    ORDER BY p2.ma_number ASC
 )
 
-
-SELECT jo.job_order_number, jo.batch_id, jo.quantity, details.*, jo.price_offer_num, pgp.dimension_x_g, pgp.dimension_y_g, pgp.dimension_z_g, pgp.qty_per_group, pgp.id, pj.project_name from job_orders jo
+SELECT
+    jo.job_order_number,
+    jo.batch_id,
+    jo.quantity,
+    details.*,
+    jo.price_offer_num,
+    pgp.dimension_x_g,
+    pgp.dimension_y_g,
+    pgp.dimension_z_g,
+    pgp.qty_per_group,
+    pgp.id,
+    pj.project_name
+FROM job_orders jo
 LEFT JOIN details ON details.id = jo.product_id
-left join parts_group_process pgp on pgp.product_id = jo.product_id
-left join product_projects pp on pp.product_id  = jo.product_id
-left join projects pj on pj.id = pp.project_id 
+LEFT JOIN parts_group_process pgp ON pgp.product_id = jo.product_id
+LEFT JOIN projects pj ON pj.id = jo.project_id
 WHERE jo.batch_id = %s
-ORDER BY jo.job_order_number ASC"""
+ORDER BY jo.job_order_number ASC;"""
 
     query = """
     SELECT 
@@ -201,7 +230,7 @@ ORDER BY jo.job_order_number ASC"""
                 sheet['D6'] = datetime.now().strftime("%Y-%m-%d")
                 sheet['D16'] = datetime.now().strftime("%Y-%m-%d")
                 sheet['D22'] = quantity
-                sheet['B18'] = project_name
+                sheet['D18'] = project_name
                 sheet['B63'] = description
 
                 if group_id and qty_per_group:
