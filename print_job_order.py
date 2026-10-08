@@ -1,4 +1,7 @@
+from csv import excel
 import math
+import time
+import win32com.client
 import json
 import re
 from tkinter.font import Font
@@ -11,6 +14,9 @@ import os
 import psycopg2
 from openpyxl import load_workbook
 import shutil
+import pythoncom
+import win32com.client
+from pathlib import Path
 from extract_drawings import getDrawing
 from globalModel import GlobalModel
 
@@ -433,3 +439,63 @@ def add_child_parts(row_childrens, id):
             child_info_set[key]["process_mill"] = "ФРЕЗОВАНЕ"
 
     return child_info_set
+
+
+
+def print_job_orders_excel(target_batch_id=None):
+    if not target_batch_id:
+        global_model.log("Batch ID is required to print job orders in Excel", "ERROR")
+        return False
+
+    BASE_OUTPUT_PATH = Path("S:/Exchange_Folder/JO/Batches")
+    target_print = BASE_OUTPUT_PATH / str(target_batch_id)
+
+    if not target_print.is_dir():
+        global_model.log(f"❌ Batch folder not found: {target_print}", "ERROR")
+        return False
+
+    files = sorted(f for f in target_print.glob("*.xlsx") if not f.name.startswith("~$"))
+    if not files:
+        global_model.log(f"❌ No Excel files found in {target_print}", "ERROR")
+        return False
+
+    pythoncom.CoInitialize()          # needed if called from a non-main thread
+    excel = None
+    all_ok = True
+    try:
+        excel = win32com.client.DispatchEx("Excel.Application")
+        excel.Visible = False
+        excel.DisplayAlerts = False
+        
+        stats = {"printed": 0, "failed": 0}   # before the loop
+
+        for file in files:
+            workbook = None
+            try:
+                workbook = excel.Workbooks.Open(str(file), ReadOnly=True)
+             
+                workbook.PrintOut()
+                stats["printed"] += 1
+                
+                time.sleep(1)  # Wait for a second to ensure the print job is sent
+                # ws1.PrintOut()
+                global_model.log(f"✅ Printed: {file}")
+            except Exception as e:
+                stats["failed"] += 1
+                global_model.log(f"❌ Failed to print {file}: {e}", "ERROR")
+                all_ok = False
+            finally:
+                if workbook is not None:
+                    workbook.Close(SaveChanges=False)
+
+        global_model.log(f"📊 Print job orders summary: {stats['printed']} printed, {stats['failed']} failed")
+        return all_ok
+    except Exception as e:
+        global_model.log(f"❌ Failed to print job orders in Excel: {e}", "ERROR")
+        return False
+    finally:
+        if excel is not None:
+            excel.Quit()
+        pythoncom.CoUninitialize()
+
+    

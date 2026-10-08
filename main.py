@@ -21,7 +21,7 @@ from import_material import import_materials
 from create_job_order import create_job_orders_from_batch
 from print_job_order import print_job_orders
 from import_product_projects_families import import_product_projects, import_product_families
-
+from print_job_order import print_job_orders_excel
 
 
 
@@ -492,6 +492,7 @@ def main():
         print("  python batch_production_system.py full-import data.xlsx 1")
         print("  python batch_production_system.py create-jobs data.xlsx 2")
         print("=" * 60)
+        
         return
     
     command = sys.argv[1]
@@ -562,6 +563,13 @@ def main():
         if len(sys.argv) == 3:
             batch_id = int(sys.argv[2])
             print_job_orders(batch_id)
+        else:
+            print("Please provide batch ID")
+            
+    elif command == 'print-jobs':
+        if len(sys.argv) > 2:
+            batch_id = int(sys.argv[2])
+            print_job_orders_excel(batch_id)
         else:
             print("Please provide batch ID")
     

@@ -113,27 +113,42 @@
 #         shutil.copy2(src_path, dst_path)
                     
                     
-import json
+# import json
 
-json_string = """{
-    "1": {
-        "1.1": {"1.2": "value1.2"},
-        "1.3": "value1.3"
-    },
-    "2": {"2.1": "value2.1", "2.2": "value2.2"},
-    "3": {"3.1": "value3.1", "3.2": "value3.2"}
-}"""
+# json_string = """{
+#     "1": {
+#         "1.1": {"1.2": "value1.2"},
+#         "1.3": "value1.3"
+#     },
+#     "2": {"2.1": "value2.1", "2.2": "value2.2"},
+#     "3": {"3.1": "value3.1", "3.2": "value3.2"}
+# }"""
 # print(type(json_string))
-real_json = json.loads(json_string)
+# real_json = json.loads(json_string)
 # print(type(real_json)) if isinstance(real_json, dict) else print("Not a dictionary")
 
-def iteration(data):
-    for key, value in data.items():
+# def iteration(data):
+#     for key, value in data.items():
         
-        if isinstance(value, dict):
-            iteration(value)
-            print(f"{key}: {value}")
+#         if isinstance(value, dict):
+#             iteration(value)
+#             print(f"{key}: {value}")
 
-for key, value in real_json.items():
-    if isinstance(value, dict):
-        iteration(value)
+# for key, value in real_json.items():
+#     if isinstance(value, dict):
+#         iteration(value)
+
+
+# import win32com.client
+# import os
+
+# excel = win32com.client.Dispatch("Excel.Application")
+# excel.Visible = True
+# file_path = os.path.abspath("C:\\Users\\plamendimitrov\\Desktop\\week 40 Липсващи компоненти ММА LHD.xlsx")
+# workbook = excel.Workbooks.Open(file_path)
+# excel.workbooks.Open(file_path)
+# worksheet = workbook.Worksheets("Sheet1")  # Replace with your sheet name
+# worksheet.PrintOut()  # This will print the worksheet
+# workbook.Close(SaveChanges=False)
+# excel.Quit()
+# print("Excel file printed successfully.")

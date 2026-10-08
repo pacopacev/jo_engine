@@ -54,5 +54,7 @@ update
 
 	python main.py pjobs 3
 
+	python main.py print-jobs 37
+
 	 
 
