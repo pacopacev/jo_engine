@@ -9,7 +9,13 @@ from utils import log, get_connection, safe_int, safe_datetime, safe_str, safe_b
 
 
 def getDrawing(root_path, keyword, extension=".pdf"):
+    # print(keyword)
     matching_files = []
+    if not keyword:
+        # skip this row, log it, or handle the "no MA number" case
+        print("No MA number provided")
+        return matching_files
+    
     try:
         for folder_path, subdirs, files in os.walk(root_path):
                 for filename in files:

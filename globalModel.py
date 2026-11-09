@@ -3,6 +3,7 @@ import psycopg2
 from datetime import datetime
 import os
 from pathlib import Path
+import re
 
 
 
@@ -92,11 +93,11 @@ class GlobalModel:
             print("Database connection closed cleanly.")
         except Exception as e:
             print(f"Error while closing connection: {e}")
+            
+    def findT(self, ma):
+        return bool(re.findall("T$", ma))
 
-    def __del__(self):
-        """Destructor to clean up resources when the object is destroyed"""
-        self.close_connection()
-                   
+    
 
 
     def name_replace(self, name: str):
@@ -126,4 +127,9 @@ class GlobalModel:
             return new_name
         else:
             return name
+    
+    
+    def __del__(self):
+            """Destructor to clean up resources when the object is destroyed"""
+            self.close_connection()
 

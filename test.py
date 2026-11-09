@@ -152,12 +152,21 @@
 # workbook.Close(SaveChanges=False)
 # excel.Quit()
 # print("Excel file printed successfully.")
-import pandas as pd
-def safe_str(value, default=None):    
-        if value is None or pd.isna(value):
-            return default
-        try:
-            return float(value)
-        except:
-            return default
-print(type(safe_str("10.12")))
+# import pandas as pd
+# def safe_str(value, default=None):    
+#         if value is None or pd.isna(value):
+#             return default
+#         try:
+#             return float(value)
+#         except:
+#             return default
+# print(type(safe_str("10.12")))
+import re
+ma = "10.21.00021T"
+
+def findT(ma):
+
+    return bool(re.findall("T$", ma))
+    
+print(findT(ma))
+    

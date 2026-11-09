@@ -161,7 +161,10 @@ ORDER BY jo.job_order_number ASC;"""
                     global_model.log(f"   ⚠️ Missing batch_id: {batch_id}", "WARNING")
                     break
                 id = global_model.safe_str(row[3]) if row[3] else ""
-                ma_number = global_model.safe_str(row[4]) if row[4] else ""
+                # ma_number = global_model.safe_str(row[4]) if row[4] else ""
+                
+                ma_number = "" if global_model.findT(row[4]) else row[4]
+                # print(ma_number)
                 dimension_x = global_model.safe_float(row[6]) if row[6] else ""
                 dimension_y = global_model.safe_float(row[7]) if row[7] else ""
                 dimension_z = global_model.safe_float(row[8]) if row[8] else ""
@@ -182,8 +185,11 @@ ORDER BY jo.job_order_number ASC;"""
                 project_name = global_model.safe_str(row[27]) if row[27] else ""
 
                 search_string = ma_number[6:]
+                
+                
 
                 matyching_files = getDrawing(root_path=r'H:\drawings', keyword=search_string, extension=".pdf")
+                # print(matyching_files)
                 print(f"   🔍 Found {len(matyching_files)} matching drawing files for MA_Number {search_string}")
                 # After finding matching files
                 if matyching_files:
@@ -380,7 +386,8 @@ def add_child_parts(row_childrens, id):
         # 15: parent_id
 
         product_id = global_model.safe_int(row_child[0]) if row_child[0] else None
-        ma_number = global_model.safe_str(row_child[1]) if row_child[1] else "N/A"
+        # ma_number = global_model.safe_str(row_child[1]) if row_child[1] else "N/A"
+        ma_number = "" if global_model.findT(row_child[1]) else row_child[1]
         product_name = global_model.safe_str(row_child[2]) if row_child[2] else "N/A"
         description = global_model.safe_str(row_child[3]) if row_child[3] else "N/A"
 
