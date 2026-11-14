@@ -22,6 +22,7 @@ from create_job_order import create_job_orders_from_batch
 from print_job_order import print_job_orders
 from import_product_projects_families import import_product_projects, import_product_families
 from print_job_order import print_job_orders_excel
+from update_ma import update_ma
 
 
 
@@ -572,6 +573,18 @@ def main():
             print_job_orders_excel(batch_id)
         else:
             print("Please provide batch ID")
+    
+    elif command == 'update_ma':
+            if len(sys.argv) > 3:
+                old_ma = str(sys.argv[2])
+                new_ma = str(sys.argv[3])
+                print(old_ma)
+                print(new_ma)
+                print(len(sys.argv))
+                # return
+                update_ma(old_ma, new_ma)
+            else:
+                print("Please provide both ma, old and new")
     
     # List products
     # elif command == 'products':
