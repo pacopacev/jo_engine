@@ -56,5 +56,8 @@ update
 
 	python main.py print-jobs 37
 
+
+	python main.py update_ma "old ma" "new ma"
+
 	 
 
