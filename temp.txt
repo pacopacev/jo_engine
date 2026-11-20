@@ -57,7 +57,7 @@ update
 	python main.py print-jobs 37
 
 
-	python main.py update_ma "old ma" "new ma"
+	python main.py update_ma "10.21.00006T" "10.21.99086A"
 
 	 
 
