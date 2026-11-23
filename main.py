@@ -547,7 +547,9 @@ def main():
         if len(sys.argv) > 2:
             excel_file = sys.argv[2]
             batch_id = int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3].isdigit() else None
-            import_full_production_data(excel_file, batch_id)
+            start_row = int(sys.argv[4]) if len(sys.argv) > 4 and sys.argv[4].isdigit() else None
+            end_row = int(sys.argv[5]) if len(sys.argv) > 5 and sys.argv[5].isdigit() else None
+            import_full_production_data(excel_file, batch_id, start_row, end_row)
         else:
             print("Please provide Excel file name")
     

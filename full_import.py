@@ -1,5 +1,6 @@
 # full_import.py - Complete working version with product_id in parts
 import pandas as pd
+from psycopg2.extras import RealDictCursor
 from pathlib import Path
 from datetime import datetime
 # from utils import log, get_connection, safe_int, safe_datetime, safe_str, safe_bool, safe_float
@@ -9,12 +10,18 @@ global_model = GlobalModel()
 
 
 
-def import_full_production_data(excel_file, target_batch_id=None):
+def import_full_production_data(excel_file, target_batch_id=None, start_row=None, end_row=None):
     """
     Import products, parts, BOM from Excel with parent-child structure
     Parent row: Has MA_Number, Is_Assembly=TRUE, Part_Number empty
     Child rows: Have Part_Number, parent_ma (references parent MA_Number)
     """
+    # print(start_row)
+    # print(end_row)
+    # return
+    
+    if start_row is not None and end_row is not None:
+        global_model.log(f"Importing rows {start_row} to {end_row} from Excel")
     
     excel_path = Path(excel_file)
     if not excel_path.exists():
@@ -23,6 +30,9 @@ def import_full_production_data(excel_file, target_batch_id=None):
     
     try:
         df = pd.read_excel(excel_path, sheet_name='product_list')
+        if start_row is not None and end_row is not None:
+            df = df.iloc[start_row-2:end_row-1]
+            # df.loc[df['ma_number'] == 'MA123']   # filter by condition
         global_model.log(f"✅ Loaded {len(df)} rows from Excel")
     except Exception as e:
         global_model.log(f"Error reading Excel: {e}", "ERROR")
@@ -32,7 +42,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
     if not conn:
         return False
     
-    cursor = conn.cursor()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
     stats = {
         'products': 0, 'parts': 0, 'bom': 0, 
         'colors': 0, 'materials': 0, 'types': 0,
@@ -61,7 +71,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
             # Filter by target batch_id
             if target_batch_id is not None and batch_id != target_batch_id:
                 continue
-            
+            # print(2)
             # Insert price offer
             price_offer_num_raw = row.get('price_offer_num')
             if pd.notna(price_offer_num_raw):
@@ -84,7 +94,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
                         batch_id = EXCLUDED.batch_id
                     RETURNING id
                 """, (price_offer_num, created_by, batch_id))
-                price_offer_id = cursor.fetchone()[0]
+                price_offer_id = cursor.fetchone()['id']
                 global_model.log(f"   ✅ Price offer {price_offer_num} processed with id {price_offer_id}")
             
             ma_number = global_model.safe_str(row.get('MA_Number'))
@@ -108,7 +118,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
                 cursor.execute("SELECT id FROM projects WHERE project_name = %s", (project_name,))
                 result = cursor.fetchone()
                 if result:
-                    project_id = result[0]
+                    project_id = result['id']
                 else:
                     cursor.execute("""
                         INSERT INTO projects (project_name, created_at, updated_at, created_by)
@@ -119,14 +129,14 @@ def import_full_production_data(excel_file, target_batch_id=None):
                         created_by = EXCLUDED.created_by
                         RETURNING id
                     """, (project_name, 'system'))
-                    project_id = cursor.fetchone()[0]
+                    project_id = cursor.fetchone()['id']
             # Get or create product type
             type_id = None
             if type_code:
                 cursor.execute("SELECT id FROM product_type WHERE type_code = %s", (type_code,))
                 result = cursor.fetchone()
                 if result:
-                    type_id = result[0]
+                    type_id = result['id']
                 else:
                     cursor.execute("""
                         INSERT INTO product_type (type_code, type_name, created_by, updated_at, alt_name)
@@ -139,25 +149,49 @@ def import_full_production_data(excel_file, target_batch_id=None):
                         alt_name = EXCLUDED.alt_name
                         RETURNING id
                     """, (type_code, type_code, 'system', alt_name))
-                    type_id = cursor.fetchone()[0]
+                    type_id = cursor.fetchone()['id']
                     stats['types'] += 1
                     global_model.log(f"   🏷️ Created type: {type_code}")
             
-            # Insert or update product
+            # # Insert or update product
+            # cursor.execute("""
+            #     INSERT INTO products (ma_number, name, description, is_assembly, type_id, created_by)
+            #     VALUES (%s, %s, %s, %s, %s, %s)
+            #     ON CONFLICT (ma_number) DO UPDATE SET
+            #         name = EXCLUDED.name,
+            #         description = EXCLUDED.description,
+            #         is_assembly = EXCLUDED.is_assembly,
+            #         type_id = EXCLUDED.type_id,
+            #         updated_at = NOW()
+            #     RETURNING id
+            # """, (ma_number, product_name, description, is_assembly, type_id, 'import'))
             cursor.execute("""
-                INSERT INTO products (ma_number, name, description, is_assembly, type_id, created_by)
-                VALUES (%s, %s, %s, %s, %s, %s)
-                ON CONFLICT (ma_number) DO UPDATE SET
+                UPDATE products
+                SET name = %s, description = %s, is_assembly = %s,
+                type_id = %s, updated_at = NOW()
+                WHERE ma_number = %s
+                RETURNING id
+                """, (product_name, description, is_assembly, type_id, ma_number))
+            product_result = cursor.fetchone()
+            if product_result is not None:
+                parent_id = product_result['id']
+                print(f"   🔄 Updated product: {ma_number} (id={parent_id})")
+            else:
+                cursor.execute("""
+                    INSERT INTO products (ma_number, name, description, is_assembly, type_id, created_by)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (ma_number) DO UPDATE SET
                     name = EXCLUDED.name,
                     description = EXCLUDED.description,
                     is_assembly = EXCLUDED.is_assembly,
                     type_id = EXCLUDED.type_id,
                     updated_at = NOW()
-                RETURNING id
-            """, (ma_number, product_name, description, is_assembly, type_id, 'import'))
-
+                    RETURNING id
+                """, (ma_number, product_name, description, is_assembly, type_id, 'import'))
+                parent_id = cursor.fetchone()['id']
+            # row = cursor.fetchone()
             
-            parent_id = cursor.fetchone()[0]
+            # parent_id = cursor.fetchone()['id']
             # print(parent_id)
             parent_products[ma_number] = parent_id
             stats['products'] += 1
@@ -177,7 +211,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
                     cursor.execute("SELECT id FROM colors WHERE color_code = %s", (color_code_upper,))
                     result = cursor.fetchone()
                     if result:
-                        color_id = result[0]
+                        color_id = result['id']
                         color_cache[color_code_upper] = color_id
             
             # Get or create material
@@ -190,7 +224,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
                     cursor.execute("SELECT id FROM materials WHERE material_code = %s", (material_code_upper,))
                     result = cursor.fetchone()
                     if result:
-                        material_id = result[0]
+                        material_id = result['id']
                         material_cache[material_code_upper] = material_id
             
             # Get dimensions
@@ -201,26 +235,51 @@ def import_full_production_data(excel_file, target_batch_id=None):
             process_mill = global_model.safe_bool(row.get('process_mill'))
             
             
-            # Insert or update part (parent part with product_id)
+            # Update existing parent part before inserting to avoid consuming a sequence value on conflicts.
             cursor.execute("""
-                INSERT INTO parts (part_number, part_name, dimension_x, dimension_y, dimension_z, color_id, material_id, parent_id, product_id, created_by, process_cut, process_mill)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (part_number) DO UPDATE SET
-                    part_name = EXCLUDED.part_name,
-                    dimension_x = EXCLUDED.dimension_x,
-                    dimension_y = EXCLUDED.dimension_y,
-                    dimension_z = EXCLUDED.dimension_z,
-                    color_id = EXCLUDED.color_id,
-                    material_id = EXCLUDED.material_id,
-                    parent_id = EXCLUDED.parent_id,
-                    product_id = EXCLUDED.product_id,
+                UPDATE parts SET
+                    part_name = %s,
+                    dimension_x = %s,
+                    dimension_y = %s,
+                    dimension_z = %s,
+                    color_id = %s,
+                    material_id = %s,
+                    parent_id = %s,
+                    product_id = %s,
                     updated_at = NOW(),
-                    process_cut = EXCLUDED.process_cut,
-                    process_mill = EXCLUDED.process_mill
+                    process_cut = %s,
+                    process_mill = %s
+                WHERE part_number = %s
                 RETURNING id
-            """, (ma_number, product_name, part_dim_x, part_dim_y, part_dim_z, color_id, material_id, None, parent_id, 'system', process_cut, process_mill))
-            
-            part_id = cursor.fetchone()[0]
+            """, (product_name, part_dim_x, part_dim_y, part_dim_z, color_id, material_id,
+                  None, parent_id, process_cut, process_mill, ma_number))
+            part_result = cursor.fetchone()
+            if part_result is not None:
+                part_id = part_result['id']
+            else:
+                cursor.execute("""
+                    INSERT INTO parts (
+                        part_number, part_name, dimension_x, dimension_y, dimension_z,
+                        color_id, material_id, parent_id, product_id, created_by,
+                        process_cut, process_mill
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (part_number) DO UPDATE SET
+                        part_name = EXCLUDED.part_name,
+                        dimension_x = EXCLUDED.dimension_x,
+                        dimension_y = EXCLUDED.dimension_y,
+                        dimension_z = EXCLUDED.dimension_z,
+                        color_id = EXCLUDED.color_id,
+                        material_id = EXCLUDED.material_id,
+                        parent_id = EXCLUDED.parent_id,
+                        product_id = EXCLUDED.product_id,
+                        updated_at = NOW(),
+                        process_cut = EXCLUDED.process_cut,
+                        process_mill = EXCLUDED.process_mill
+                    RETURNING id
+                """, (ma_number, product_name, part_dim_x, part_dim_y, part_dim_z,
+                      color_id, material_id, None, parent_id, 'system', process_cut, process_mill))
+                part_id = cursor.fetchone()['id']
             part_ids[ma_number] = part_id
             stats['parts'] += 1
             global_model.log(f"   🔧 Created/Updated part record for product: {ma_number} (product_id={parent_id})")
@@ -261,7 +320,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
                         process_mill = EXCLUDED.process_mill
                     RETURNING id
                 """, (ma_number, product_name, dimension_x_g, dimension_y_g, dimension_z_g, qty_per_group, color_id, material_id, 'system', parent_id, parent_id, process_cut, process_mill))
-                group_id = cursor.fetchone()[0]
+                group_id = cursor.fetchone()['id']
                 global_model.log(f"   👥 Group processing assigned: {group_processing} (id={group_id})")
         # =============================================
         # SECOND PASS: Process child parts and BOM
@@ -311,7 +370,7 @@ def import_full_production_data(excel_file, target_batch_id=None):
                     cursor.execute("SELECT id FROM colors WHERE color_code = %s", (color_code_upper,))
                     result = cursor.fetchone()
                     if result:
-                        color_id = result[0]
+                        color_id = result['id']
                         color_cache[color_code_upper] = color_id
             
             # Get or use cached material
@@ -324,39 +383,59 @@ def import_full_production_data(excel_file, target_batch_id=None):
                     cursor.execute("SELECT id FROM materials WHERE material_code = %s", (material_code_upper,))
                     result = cursor.fetchone()
                     if result:
-                        material_id = result[0]
+                        material_id = result['id']
                         material_cache[material_code_upper] = material_id
             
-            # Insert or update child part with product_id
+            # Update existing child parts first so imports don't consume sequence values on conflicts.
             cursor.execute("""
-                INSERT INTO parts (
-                    part_number, part_name, 
-                    dimension_x, dimension_y, dimension_z,
-                    color_id, material_id, 
-                    current_stock, unit_of_measure, 
-                    parent_id, product_id, created_by, process_cut, process_mill
-                )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (part_number) DO UPDATE SET
-                    part_name = EXCLUDED.part_name,
-                    dimension_x = EXCLUDED.dimension_x,
-                    dimension_y = EXCLUDED.dimension_y,
-                    dimension_z = EXCLUDED.dimension_z,
-                    color_id = EXCLUDED.color_id,
-                    material_id = EXCLUDED.material_id,
-                    parent_id = EXCLUDED.parent_id,
-                    product_id = EXCLUDED.product_id,
+                UPDATE parts SET
+                    part_name = %s,
+                    dimension_x = %s,
+                    dimension_y = %s,
+                    dimension_z = %s,
+                    color_id = %s,
+                    material_id = %s,
+                    parent_id = %s,
+                    product_id = %s,
                     updated_at = NOW(),
-                    process_cut = EXCLUDED.process_cut,
-                    process_mill = EXCLUDED.process_mill
+                    process_cut = %s,
+                    process_mill = %s
+                WHERE part_number = %s
                 RETURNING id
-            """, (part_number, part_number,
-                  part_dim_x, part_dim_y, part_dim_z,
-                  color_id, material_id,
-                  0, 'pcs',
-                  parent_product_id, parent_product_id, 'system', process_cut, process_mill)
-            )
-            part_id = cursor.fetchone()[0]
+            """, (part_number, part_dim_x, part_dim_y, part_dim_z,
+                  color_id, material_id, parent_product_id, parent_product_id,
+                  process_cut, process_mill, part_number))
+            part_result = cursor.fetchone()
+            if part_result is not None:
+                part_id = part_result['id']
+            else:
+                cursor.execute("""
+                    INSERT INTO parts (
+                        part_number, part_name,
+                        dimension_x, dimension_y, dimension_z,
+                        color_id, material_id,
+                        current_stock, unit_of_measure,
+                        parent_id, product_id, created_by, process_cut, process_mill
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    ON CONFLICT (part_number) DO UPDATE SET
+                        part_name = EXCLUDED.part_name,
+                        dimension_x = EXCLUDED.dimension_x,
+                        dimension_y = EXCLUDED.dimension_y,
+                        dimension_z = EXCLUDED.dimension_z,
+                        color_id = EXCLUDED.color_id,
+                        material_id = EXCLUDED.material_id,
+                        parent_id = EXCLUDED.parent_id,
+                        product_id = EXCLUDED.product_id,
+                        updated_at = NOW(),
+                        process_cut = EXCLUDED.process_cut,
+                        process_mill = EXCLUDED.process_mill
+                    RETURNING id
+                """, (part_number, part_number,
+                      part_dim_x, part_dim_y, part_dim_z,
+                      color_id, material_id, 0, 'pcs',
+                      parent_product_id, parent_product_id, 'system', process_cut, process_mill))
+                part_id = cursor.fetchone()['id']
             stats['parts'] += 1
             global_model.log(f"      🔧 Created/Updated part: {part_number} (product_id={parent_product_id})")
             

@@ -50,6 +50,8 @@ update
 
 	python main.py full-import data.xlsx
 
+	python main.py full-import data.xlsx 0 10 50
+
 	python main.py cj data.xlsx 3
 
 	python main.py pjobs 3
