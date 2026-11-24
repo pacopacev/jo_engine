@@ -6,7 +6,7 @@ from datetime import datetime
 # from utils import log, get_connection, safe_int, safe_datetime, safe_str, safe_bool, safe_float
 from globalModel import GlobalModel
 
-global_model = GlobalModel()
+# global_model = GlobalModel()
 
 
 
@@ -19,13 +19,15 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
     # print(start_row)
     # print(end_row)
     # return
+    model = GlobalModel()
     
     if start_row is not None and end_row is not None:
-        global_model.log(f"Importing rows {start_row} to {end_row} from Excel")
+        model.log(f"Importing rows {start_row} to {end_row} from Excel")
     
     excel_path = Path(excel_file)
     if not excel_path.exists():
-        global_model.log(f"File not found: {excel_file}", "ERROR")
+        model.log(f"File not found: {excel_file}", "ERROR")
+        model.close_connection()
         return False
     
     try:
@@ -33,16 +35,18 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
         if start_row is not None and end_row is not None:
             df = df.iloc[start_row-2:end_row-1]
             # df.loc[df['ma_number'] == 'MA123']   # filter by condition
-        global_model.log(f"✅ Loaded {len(df)} rows from Excel")
+        model.log(f"✅ Loaded {len(df)} rows from Excel")
     except Exception as e:
-        global_model.log(f"Error reading Excel: {e}", "ERROR")
+        model.log(f"Error reading Excel: {e}", "ERROR")
+        model.close_connection()
         return False
     
-    conn = global_model.conn
+    conn = model.conn
     if not conn:
+        model.close_connection()
         return False
     
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor = None
     stats = {
         'products': 0, 'parts': 0, 'bom': 0, 
         'colors': 0, 'materials': 0, 'types': 0,
@@ -60,30 +64,35 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
     part_ids = {}
     
     try:
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         # =============================================
         # FIRST PASS: Create all parent products
         # =============================================
         for idx, row in df.iterrows():
             
             # Get batch_id first
-            batch_id = global_model.safe_int(row.get('batch_id'), None)
-            
+            batch_id = model.safe_int(row.get('batch_id'), None)
+            print(batch_id)
+            print(target_batch_id)
             # Filter by target batch_id
             if target_batch_id is not None and batch_id != target_batch_id:
+                print(1)
                 continue
-            # print(2)
+            
+            
+            print(2)
             # Insert price offer
             price_offer_num_raw = row.get('price_offer_num')
             if pd.notna(price_offer_num_raw):
                 try:
                     price_offer_num = str(int(float(price_offer_num_raw)))
                 except (ValueError, TypeError):
-                    price_offer_num = global_model.safe_str(price_offer_num_raw)
+                    price_offer_num = model.safe_str(price_offer_num_raw)
             else:
                 price_offer_num = None
 
             if price_offer_num:
-                global_model.log(f"Inserting price offer: {price_offer_num}")
+                model.log(f"Inserting price offer: {price_offer_num}")
                 created_by = 'import batch'
                 cursor.execute("""
                     INSERT INTO price_offers (price_offer_num, created_at, updated_at, created_by, batch_id)
@@ -95,22 +104,22 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                     RETURNING id
                 """, (price_offer_num, created_by, batch_id))
                 price_offer_id = cursor.fetchone()['id']
-                global_model.log(f"   ✅ Price offer {price_offer_num} processed with id {price_offer_id}")
+                model.log(f"   ✅ Price offer {price_offer_num} processed with id {price_offer_id}")
             
-            ma_number = global_model.safe_str(row.get('MA_Number'))
+            ma_number = model.safe_str(row.get('MA_Number'))
             
             # Skip rows without MA_Number (child rows)
             if not ma_number:
                 continue
             
-            global_model.log(f"\n📦 Processing product: {ma_number}")
+            model.log(f"\n📦 Processing product: {ma_number}")
             
-            product_name = global_model.safe_str(row.get('Product_Name'), '')
-            description = global_model.safe_str(row.get('Description'))
-            is_assembly = global_model.safe_bool(row.get('Is_Assembly', False))
-            type_code = global_model.safe_str(row.get('type_code'))
-            alt_name = global_model.safe_str(row.get('alt_name'))
-            project_name = global_model.safe_str(row.get('project_name'))
+            product_name = model.safe_str(row.get('Product_Name'), '')
+            description = model.safe_str(row.get('Description'))
+            is_assembly = model.safe_bool(row.get('Is_Assembly', False))
+            type_code = model.safe_str(row.get('type_code'))
+            alt_name = model.safe_str(row.get('alt_name'))
+            project_name = model.safe_str(row.get('project_name'))
             
             # Get or create project
             project_id = None
@@ -151,7 +160,7 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                     """, (type_code, type_code, 'system', alt_name))
                     type_id = cursor.fetchone()['id']
                     stats['types'] += 1
-                    global_model.log(f"   🏷️ Created type: {type_code}")
+                    model.log(f"   🏷️ Created type: {type_code}")
             
             # # Insert or update product
             # cursor.execute("""
@@ -195,11 +204,11 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
             # print(parent_id)
             parent_products[ma_number] = parent_id
             stats['products'] += 1
-            global_model.log(f"   ✅ Product saved: {ma_number} (id={parent_id})")
+            model.log(f"   ✅ Product saved: {ma_number} (id={parent_id})")
             
             # Get color and material IDs
-            color_code = global_model.safe_str(row.get('color_code'))
-            material_code = global_model.safe_str(row.get('material_code'))
+            color_code = model.safe_str(row.get('color_code'))
+            material_code = model.safe_str(row.get('material_code'))
             
             # Get or create color
             color_id = None
@@ -228,11 +237,11 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                         material_cache[material_code_upper] = material_id
             
             # Get dimensions
-            part_dim_x = global_model.safe_float(row.get('Part_Length'))
-            part_dim_y = global_model.safe_float(row.get('Part_Width'))
-            part_dim_z = global_model.safe_float(row.get('Part_Height'))
-            process_cut = global_model.safe_bool(row.get('process_cut'))
-            process_mill = global_model.safe_bool(row.get('process_mill'))
+            part_dim_x = model.safe_float(row.get('Part_Length'))
+            part_dim_y = model.safe_float(row.get('Part_Width'))
+            part_dim_z = model.safe_float(row.get('Part_Height'))
+            process_cut = model.safe_bool(row.get('process_cut'))
+            process_mill = model.safe_bool(row.get('process_mill'))
             
             
             # Update existing parent part before inserting to avoid consuming a sequence value on conflicts.
@@ -282,15 +291,15 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                 part_id = cursor.fetchone()['id']
             part_ids[ma_number] = part_id
             stats['parts'] += 1
-            global_model.log(f"   🔧 Created/Updated part record for product: {ma_number} (product_id={parent_id})")
+            model.log(f"   🔧 Created/Updated part record for product: {ma_number} (product_id={parent_id})")
         
             #create group processing
-            group_processing = global_model.safe_bool(row.get('group_processing'))
+            group_processing = model.safe_bool(row.get('group_processing'))
             if group_processing:
-                dimension_x_g = global_model.safe_float(row.get('dimension_x_g'))
-                dimension_y_g = global_model.safe_float(row.get('dimension_y_g'))
-                dimension_z_g = global_model.safe_float(row.get('dimension_z_g'))
-                qty_per_group = global_model.safe_int(row.get('qty_per_group'), 1)
+                dimension_x_g = model.safe_float(row.get('dimension_x_g'))
+                dimension_y_g = model.safe_float(row.get('dimension_y_g'))
+                dimension_z_g = model.safe_float(row.get('dimension_z_g'))
+                qty_per_group = model.safe_int(row.get('qty_per_group'), 1)
                 cursor.execute("""
                     INSERT INTO parts_group_process (part_number, part_name, 
                     dimension_x_g, 
@@ -321,44 +330,44 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                     RETURNING id
                 """, (ma_number, product_name, dimension_x_g, dimension_y_g, dimension_z_g, qty_per_group, color_id, material_id, 'system', parent_id, parent_id, process_cut, process_mill))
                 group_id = cursor.fetchone()['id']
-                global_model.log(f"   👥 Group processing assigned: {group_processing} (id={group_id})")
+                model.log(f"   👥 Group processing assigned: {group_processing} (id={group_id})")
         # =============================================
         # SECOND PASS: Process child parts and BOM
         # =============================================
         for idx, row in df.iterrows():
-            parent_ma = global_model.safe_str(row.get('parent_ma'))
+            parent_ma = model.safe_str(row.get('parent_ma'))
             
             # Skip if not a child row
             if not parent_ma:
                 continue
             
             # Filter by target batch_id
-            batch_id = global_model.safe_int(row.get('batch_id'), None)
+            batch_id = model.safe_int(row.get('batch_id'), None)
             if target_batch_id is not None and batch_id != target_batch_id:
                 continue
             
             # Get parent product ID
             parent_product_id = parent_products.get(parent_ma)
             if not parent_product_id:
-                global_model.log(f"   ⚠️ Parent product not found: {parent_ma}", "WARNING")
+                model.log(f"   ⚠️ Parent product not found: {parent_ma}", "WARNING")
                 stats['errors'] += 1
                 continue
             
-            part_number = global_model.safe_str(row.get('Part_Number'))
+            part_number = model.safe_str(row.get('Part_Number'))
             if not part_number:
                 continue
             
-            part_qty = global_model.safe_int(row.get('Part_Qty'), 1)
-            part_dim_x = global_model.safe_float(row.get('Part_Length'))
-            part_dim_y = global_model.safe_float(row.get('Part_Width'))
-            part_dim_z = global_model.safe_float(row.get('Part_Height'))
-            assembly_order = global_model.safe_int(row.get('Assembly_Order'), 0)
+            part_qty = model.safe_int(row.get('Part_Qty'), 1)
+            part_dim_x = model.safe_float(row.get('Part_Length'))
+            part_dim_y = model.safe_float(row.get('Part_Width'))
+            part_dim_z = model.safe_float(row.get('Part_Height'))
+            assembly_order = model.safe_int(row.get('Assembly_Order'), 0)
             
             # Get color and material IDs for this child part
-            color_code = global_model.safe_str(row.get('color_code'))
-            material_code = global_model.safe_str(row.get('material_code'))
-            process_cut = global_model.safe_bool(row.get('process_cut'))
-            process_mill = global_model.safe_bool(row.get('process_mill'))
+            color_code = model.safe_str(row.get('color_code'))
+            material_code = model.safe_str(row.get('material_code'))
+            process_cut = model.safe_bool(row.get('process_cut'))
+            process_mill = model.safe_bool(row.get('process_mill'))
             
             # Get or use cached color
             color_id = None
@@ -437,7 +446,7 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                       parent_product_id, parent_product_id, 'system', process_cut, process_mill))
                 part_id = cursor.fetchone()['id']
             stats['parts'] += 1
-            global_model.log(f"      🔧 Created/Updated part: {part_number} (product_id={parent_product_id})")
+            model.log(f"      🔧 Created/Updated part: {part_number} (product_id={parent_product_id})")
             
             # Create BOM relationship
             cursor.execute("""
@@ -449,36 +458,39 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                     updated_at = NOW()
             """, (parent_product_id, part_id, part_qty, assembly_order, 'import'))
             stats['bom'] += 1
-            global_model.log(f"      🔗 Added part: {part_number} x{part_qty}")
+            model.log(f"      🔗 Added part: {part_number} x{part_qty}")
         
         # =============================================
         # COMMIT ALL CHANGES
         # =============================================
         conn.commit()
-        global_model.log("✅ All changes committed to database")
+        model.log("✅ All changes committed to database")
         
         # Final summary
-        global_model.log("\n" + "=" * 70)
-        global_model.log("✅ FULL PRODUCTION IMPORT COMPLETED!", "SUCCESS")
-        global_model.log("=" * 70)
-        global_model.log(f"   📦 Products: {stats['products']}")
-        global_model.log(f"   🔧 Parts: {stats['parts']}")
-        global_model.log(f"   🔗 BOM relationships: {stats['bom']}")
-        global_model.log(f"   🎨 Colors: {stats['colors']}")
-        global_model.log(f"   🔩 Materials: {stats['materials']}")
-        global_model.log(f"   🏷️ Product types: {stats['types']}")
-        global_model.log(f"   📁 Batches: {stats['batches']}")
-        global_model.log(f"   ❌ Errors: {stats['errors']}")
-        global_model.log("=" * 70)
+        model.log("\n" + "=" * 70)
+        model.log("✅ FULL PRODUCTION IMPORT COMPLETED!", "SUCCESS")
+        model.log("=" * 70)
+        model.log(f"   📦 Products: {stats['products']}")
+        model.log(f"   🔧 Parts: {stats['parts']}")
+        model.log(f"   🔗 BOM relationships: {stats['bom']}")
+        model.log(f"   🎨 Colors: {stats['colors']}")
+        model.log(f"   🔩 Materials: {stats['materials']}")
+        model.log(f"   🏷️ Product types: {stats['types']}")
+        model.log(f"   📁 Batches: {stats['batches']}")
+        model.log(f"   ❌ Errors: {stats['errors']}")
+        model.log("=" * 70)
         
         return True
        
     except Exception as e:
-        global_model.log(f"❌ Error: {e}", "ERROR")
+        model.log(f"❌ Error: {e}", "ERROR")
         import traceback
         traceback.print_exc()
         conn.rollback()
         return False
     finally:
-        cursor.close()
-        conn.close()
+        try:
+            if cursor is not None:
+                cursor.close()
+        finally:
+            model.close_connection()

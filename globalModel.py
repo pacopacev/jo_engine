@@ -1,34 +1,64 @@
 import pandas as pd
-import psycopg2
+from psycopg2 import pool
 from datetime import datetime
 import os
-from pathlib import Path
 import re
+from threading import Lock
+from dotenv import load_dotenv
 
-
+load_dotenv()
 
 class GlobalModel:
+    MIN_CONNECTIONS = 1
+    MAX_CONNECTIONS = 3
+    _db_pool = None
+    _db_pool_lock = Lock()
+
     def __init__(self):
         
         print("GlobalModel initialized")
+ 
         self.db_config = {
-            'host': 'pg-143cbe8e-pacopacev277-7915.e.aivencloud.com',
-            'database': 'defaultdb',
-            'user': 'avnadmin', 
-            'password': 'AVNS_LqW5lU_kmJDiLuips8n',
-            'port': 11821,
-            'sslmode': 'require'
-        }        
-        self.conn = self.connect_db()
+                    'host': os.getenv("DB_HOST"),
+                    'database': os.getenv("DB_NAME"),
+                    'user': os.getenv("DB_USER"), 
+                    'password': os.getenv("DB_PASSWORD"),
+                    'port': os.getenv("DB_PORT", "11821"),
+                    'sslmode': 'require'
+                }  
+        
+        self._conn = None
+
+    @property
+    def conn(self):
+        if self._conn is not None and getattr(self._conn, 'closed', 0) != 0:
+            self.close_connection()
+        if self._conn is None:
+            self._conn = self.connect_db()
+        return self._conn
+
+    @conn.setter
+    def conn(self, connection):
+        self._conn = connection
+
+    @classmethod
+    def _get_db_pool(cls, db_config):
+        if cls._db_pool is None:
+            with cls._db_pool_lock:
+                if cls._db_pool is None:
+                    cls._db_pool = pool.ThreadedConnectionPool(
+                        cls.MIN_CONNECTIONS,
+                        cls.MAX_CONNECTIONS,
+                        **db_config
+                    )
+        return cls._db_pool
     
     def connect_db(self):
-        """Creates or restores a live database connection"""
+        """Borrows a live connection from the shared pool."""
         try:
-            self.conn = psycopg2.connect(**self.db_config)
-            return self.conn
+            return self._get_db_pool(self.db_config).getconn()
         except Exception as e:
-            self.log(f"Failed to connect directly to Aiven Cloud: {e}", "ERROR")
-            self.conn = None
+            self.log(f"Failed to get a database connection from the pool: {e}", "ERROR")
             return None 
     def log(self, message, type="INFO"):
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -83,16 +113,32 @@ class GlobalModel:
             return default
         
     def close_connection(self):
-        """Safely closes the connection if it exists"""
-        # Remove or guard any self.cursor references here
+        """Returns the borrowed connection to the shared pool."""
+        conn = getattr(self, '_conn', None)
+        if conn is None:
+            return
+
+        self._conn = None
         try:
-            if hasattr(self, 'conn') and self.conn is not None:
-                if getattr(self.conn, 'closed', 0) == 0:
-                    self.conn.close()
-                self.conn = None
-            print("Database connection closed cleanly.")
+            discard = getattr(conn, 'closed', 0) != 0
+            if not discard:
+                try:
+                    conn.rollback()
+                except Exception as e:
+                    self.log(f"Failed to reset database connection before returning it to the pool: {e}", "ERROR")
+                    discard = True
+
+            db_pool = type(self)._db_pool
+            if db_pool is None:
+                conn.close()
+            else:
+                db_pool.putconn(conn, close=discard)
+            if discard:
+                self.log("Discarded unusable database connection.", "WARNING")
+            else:
+                print("Database connection returned to pool.")
         except Exception as e:
-            print(f"Error while closing connection: {e}")
+            self.log(f"Error while returning database connection to pool: {e}", "ERROR")
             
     def findT(self, ma):
         return bool(re.findall("T$", ma))
@@ -132,4 +178,3 @@ class GlobalModel:
     def __del__(self):
             """Destructor to clean up resources when the object is destroyed"""
             self.close_connection()
-

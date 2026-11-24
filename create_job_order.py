@@ -34,11 +34,12 @@ def create_job_orders_from_batch(excel_file, target_batch_id=None):
     if not conn:
         return False
     
-    cursor = conn.cursor()
+    cursor = None
     stats = {'batches': 0, 'job_orders': 0, 'errors': 0}
     processed_combinations = set()
     
     try:
+        cursor = conn.cursor()
         # =============================================
         # GET THE LAST JOB ORDER NUMBER FROM DATABASE
         # =============================================
@@ -228,5 +229,8 @@ def create_job_orders_from_batch(excel_file, target_batch_id=None):
         conn.rollback()
         return False
     finally:
-        cursor.close()
-        conn.close()
+        try:
+            if cursor is not None:
+                cursor.close()
+        finally:
+            global_model.close_connection()

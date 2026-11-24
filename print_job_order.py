@@ -122,6 +122,7 @@ ORDER BY jo.job_order_number ASC;"""
     if not conn:
         return False
 
+    cursor = None
     try:
         # Create batch directory using batch_id
         BASE_OUTPUT_PATH = Path("S:/Exchange_Folder/JO/Batches")
@@ -348,17 +349,18 @@ ORDER BY jo.job_order_number ASC;"""
                 global_model.log(f"❌ Error processing job order {row[0] if row else 'unknown'}: {str(e)}", "ERROR")
                 continue
 
-        cursor.close()
-        conn.close()
-
         global_model.log(f"✅ Successfully created {success_count} out of {len(rows)} job order files in {batch_dir}")
         return success_count > 0
 
     except Exception as e:
         global_model.log(f"❌ Error in print_job_orders: {str(e)}", "ERROR")
-        if conn:
-            conn.close()
         return False
+    finally:
+        try:
+            if cursor is not None:
+                cursor.close()
+        finally:
+            global_model.close_connection()
 
 
 def add_child_parts(row_childrens, id):
