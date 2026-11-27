@@ -10,7 +10,7 @@ load_dotenv()
 
 class GlobalModel:
     MIN_CONNECTIONS = 1
-    MAX_CONNECTIONS = 3
+    MAX_CONNECTIONS = 2
     _db_pool = None
     _db_pool_lock = Lock()
 

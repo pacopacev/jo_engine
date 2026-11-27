@@ -105,8 +105,8 @@ def create_job_orders_from_batch(excel_file, target_batch_id=None):
                 continue
             project_name = global_model.safe_str(row.get('project_name'), None)
             batch_id = global_model.safe_int(row.get('batch_id'), None)
-            batch_name = global_model.safe_str(row.get('price_offer_num'), None)
-            print(f"Processing MA_Number: {ma_number}, batch_id: {batch_id}, batch_name: {batch_name}")
+            # batch_name = global_model.safe_str(row.get('price_offer_num'), None)
+            print(f"Processing MA_Number: {ma_number}, batch_id: {batch_id}")
             
             # =============================================
             # FILTER BY TARGET BATCH_ID IF SPECIFIED
@@ -145,20 +145,21 @@ def create_job_orders_from_batch(excel_file, target_batch_id=None):
             product_id = product_result[0]
             
             # Create batch if not exists
-            cursor.execute("SELECT id, batch_number FROM batch WHERE id = %s", (batch_id,))
-            batch_result = cursor.fetchone()
+            # cursor.execute("SELECT id, batch_number FROM batch WHERE id = %s", (batch_id,))
+            # batch_result = cursor.fetchone()
             
-            if batch_result:
-                batch_number = batch_result[1]
-                global_model.log(f"   📁 Using existing batch: {batch_number}")
+            if batch_id is None:
+                # batch_number = batch_result[1]
+                global_model.log(f"   ⚠️ No batch_id found for MA_Number: {ma_number}", "WARNING")
             else:
-                batch_number = f"BATCH-{batch_id:04d}"
+                # batch_number = f"BATCH-{batch_id:04d}"
                 cursor.execute("""
-                    INSERT INTO batch (id, batch_number, batch_name, created_by, created_at)
-                    VALUES (%s, %s, %s, %s, NOW())
-                """, (batch_id, batch_number, batch_name, 'job_import'))
+                    INSERT INTO batch (id, created_by, created_at)
+                    VALUES (%s, %s, NOW())
+                    ON CONFLICT (id) DO NOTHING
+                """, (batch_id, 'job_import'))
                 stats['batches'] += 1
-                global_model.log(f"   📁 Created batch: {batch_number}")
+                global_model.log(f"   📁 Created batch: {batch_id}")
             
             # Use the next_job_number and increment it
             job_order_number = next_job_number + 1

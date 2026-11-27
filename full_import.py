@@ -75,12 +75,12 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
             print(batch_id)
             print(target_batch_id)
             # Filter by target batch_id
-            if target_batch_id is not None and batch_id != target_batch_id:
-                print(1)
-                continue
+            # if target_batch_id is not None and batch_id != target_batch_id:
+            #     print(1)
+            #     continue
             
             
-            print(2)
+            # print(2)
             # Insert price offer
             price_offer_num_raw = row.get('price_offer_num')
             if pd.notna(price_offer_num_raw):
@@ -99,8 +99,7 @@ def import_full_production_data(excel_file, target_batch_id=None, start_row=None
                     VALUES (%s, NOW(), NOW(), %s, %s)
                     ON CONFLICT (price_offer_num) DO UPDATE SET
                         updated_at = NOW(),
-                        created_by = EXCLUDED.created_by,
-                        batch_id = EXCLUDED.batch_id
+                        created_by = EXCLUDED.created_by
                     RETURNING id
                 """, (price_offer_num, created_by, batch_id))
                 price_offer_id = cursor.fetchone()['id']
